@@ -1,10 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import random
+import xml.dom.minidom
 from PyQt4 import QtCore, QtGui
 from ms import MS
 from bts import BTS
 from display import Display
+from xml.dom.minidom import Node
+
 
 class Carte:
   def __init__(self, width=800, height=600):
@@ -64,6 +68,45 @@ class Carte:
   def test(self):
     self.__display.test()
 
+  def loadFile(self, conf):
+    xmldoc = xml.dom.minidom.parse(conf)
+    px = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("px"))
+    meters = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("meters"))
+    
+    for node in xmldoc.getElementsByTagName("Bts"):
+      self.add(BTS(getInPx(node.getAttribute("location").split(",")[0],
+      px, meters), getInPx(node.getAttribute("location").split(",")[1],
+      px, meters), node.getAttribute("network"),
+      int(node.getAttribute("ho_margin")), int(node.getAttribute("ms_txpwr_max")),
+      int(node.getAttribute("bts_txpwr_max")), int(node.getAttribute("rxlev_min")),
+      int(node.getAttribute("max_ms_range")),
+      int(node.getAttribute("l_rxqual_h")),
+      int(node.getAttribute("l_rxlev_dl_h")),
+      int(node.getAttribute("l_rxlev_up_h"))))
+
+    for node in xmldoc.getElementsByTagName("Mobile"):
+      if (node.getAttribute("location") != ""):
+        msX = getInPx(node.getAttribute("location").split(",")[0], px, meters)
+        msY = getInPx(node.getAttribute("location").split(",")[1], px, meters)
+      else:#TODO dynamic size, depending on xml values
+        msX = random.randint(0, 799)
+        msY = random.randint(0,599)
+      self.add(MS(msX, msY, node.getAttribute("network"), node.getAttribute("p")))
+        
+
+
+def getInPx(axis, px, meters):
+  print(axis)
+  if (axis.find("km") >= 0):
+    axis = axis.replace("km","")
+    return 1000 * int(axis) * px / meters
+  elif (axis.find("m") >= 0):
+    axis = axis.replace("m","")
+    return int(axis) * px / meters
+  else:
+    return int(axis)
+    
+
 def get_color(idx, low_value = False):
   if not low_value:
     saturation = 1
@@ -110,4 +153,3 @@ def hsv2rgb(hue, saturation, value):
     rgb = (chroma, m, x)
 
   return rgb
-

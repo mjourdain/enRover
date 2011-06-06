@@ -4,12 +4,13 @@
 import random
 
 class MS:
-  def __init__(self, x, y, network):
+  def __init__(self, x, y, network, p):
     self.__bts_list = set()
     self.bts = None
     self.pos_x = x
     self.pos_y = y
     self.pref_network = network
+    self.p = p
     self.__last_move = random.randint(0, 7)
 
   def update_bts_list(self, bts_list):
