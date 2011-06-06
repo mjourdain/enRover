@@ -8,11 +8,15 @@ from bts import BTS
 class Display(QtGui.QMainWindow):
   def __init__(self, width, height):
     QtGui.QMainWindow.__init__(self)
-    self.resize(width, height)
+
     self.__pix = QtGui.QPixmap(width, height)
     self.__paint = QtGui.QPainter(self.__pix)
-    self.__label = QtGui.QLabel(self)
+
+    self.__label = QtGui.QLabel()
     self.__label.resize(width, height)
+
+    self.setCentralWidget(self.__label)
+    self.adjustSize()
 
     self.__bts_pen = QtGui.QPen()
     self.__bts_pen.setWidth(3)
@@ -24,6 +28,19 @@ class Display(QtGui.QMainWindow):
     paintFont = QtGui.QFont()
     paintFont.setPointSizeF(7.0)
     self.__paint.setFont(paintFont);
+
+    self.__toolbar = QtGui.QToolBar()
+    self.addToolBar(self.__toolbar)
+
+    style =  self.style()
+    loadIcon = style.standardIcon(QtGui.QStyle.SP_DirOpenIcon)
+    self.action_load = self.__toolbar.addAction(loadIcon, "load file")
+    reloadIcon = style.standardIcon(QtGui.QStyle.SP_BrowserReload)
+    self.action_reload = self.__toolbar.addAction(reloadIcon, "reload file")
+    self.__toolbar.addSeparator()
+
+    pauseIcon = style.standardIcon(QtGui.QStyle.SP_MediaPause)
+    self.action_play = self.__toolbar.addAction(pauseIcon, "play / pause")
 
     self.clean()
     self.update()
