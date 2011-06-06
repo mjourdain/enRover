@@ -12,7 +12,7 @@ app = QtGui.QApplication(sys.argv)
 
 carte = Carte(800, 600)
 
-carte.loadFile("conf.xml")
+#carte.loadFile("conf.xml")
 
 #carte.add(BTS(20, 400, "GSM"))
 #carte.add(BTS(130, 210, "GSM"))

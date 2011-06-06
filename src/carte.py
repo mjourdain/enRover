@@ -92,33 +92,33 @@ class Carte:
 
     print self.__filename
 
-
-
-  def loadFile(self, conf):
-    xmldoc = xml.dom.minidom.parse(conf)
+    xmldoc = xml.dom.minidom.parse(self.__filename)
     px = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("px"))
     meters = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("meters"))
-    
-    for node in xmldoc.getElementsByTagName("Bts"):
-      self.add(BTS(getInPx(node.getAttribute("location").split(",")[0],
-      px, meters), getInPx(node.getAttribute("location").split(",")[1],
-      px, meters), node.getAttribute("network"),
-      int(node.getAttribute("ho_margin")), int(node.getAttribute("ms_txpwr_max")),
-      int(node.getAttribute("bts_txpwr_max")), int(node.getAttribute("rxlev_min")),
-      int(node.getAttribute("max_ms_range")),
-      int(node.getAttribute("l_rxqual_h")),
-      int(node.getAttribute("l_rxlev_dl_h")),
-      int(node.getAttribute("l_rxlev_up_h"))))
 
+    for node in xmldoc.getElementsByTagName("Bts"):
+      self.add(BTS(getInPx(node.getAttribute("location").split(",")[0], px,
+        meters), getInPx(node.getAttribute("location").split(",")[1], px,
+        meters), node.getAttribute("network"),
+        int(node.getAttribute("ho_margin")),
+        int(node.getAttribute("ms_txpwr_max"))),
+        int(node.getAttribute("bts_txpwr_max")),
+        int(node.getAttribute("rxlev_min")),
+        int(node.getAttribute("max_ms_range")),
+        int(node.getAttribute("l_rxqual_h")),
+        int(node.getAttribute("l_rxlev_dl_h")),
+        int(node.getAttribute("l_rxlev_up_h")))
+    
     for node in xmldoc.getElementsByTagName("Mobile"):
       if (node.getAttribute("location") != ""):
         msX = getInPx(node.getAttribute("location").split(",")[0], px, meters)
         msY = getInPx(node.getAttribute("location").split(",")[1], px, meters)
-      else:#TODO dynamic size, depending on xml values
+      else: #TODO dynamic size, depending on xml values
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
-      self.add(MS(msX, msY, node.getAttribute("network"), node.getAttribute("p")))
-        
+        self.add(MS(msX, msY, node.getAttribute("network"),
+          node.getAttribute("p")))
+
 
 
 def getInPx(axis, px, meters):
