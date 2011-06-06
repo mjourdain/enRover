@@ -13,10 +13,15 @@ class Carte:
     self.__bts = {}
     self.__ms = set()
     self.__color_index = 0
+    self.__filename = None
+
+    self.__display.action_load.triggered.connect(self.load_file)
+    self.__display.action_reload.triggered.connect(self.reload_file)
+    self.__display.action_play.triggered.connect(self.toggle_moving_ms)
 
     self.__move_timer = QtCore.QTimer()
     self.__move_timer.timeout.connect(self.movems)
-    self.__move_timer.setInterval(10)
+    self.__move_timer.setInterval(50)
 
     self.__display.show()
 
@@ -61,8 +66,29 @@ class Carte:
   def start_moving_ms(self):
     self.__move_timer.start()
 
-  def test(self):
-    self.__display.test()
+  def toggle_moving_ms(self):
+    if self.__move_timer.isActive():
+      self.__move_timer.stop()
+    else:
+      self.__move_timer.start()
+
+  def load_file(self, filename=None):
+    if not filename:
+      filename = QtGui.QFileDialog.getOpenFileName()
+
+    self.__filename = filename
+    self.__load_file()
+
+  def reload_file(self):
+    self.__load_file()
+
+  def __load_file(self):
+    if not self.__filename:
+      return
+
+    print self.__filename
+
+
 
 def get_color(idx, low_value = False):
   if not low_value:
