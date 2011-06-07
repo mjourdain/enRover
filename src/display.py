@@ -40,14 +40,20 @@ class Display(QtGui.QMainWindow):
     self.addToolBar(self.__toolbar)
 
     style =  self.style()
+
     loadIcon = style.standardIcon(QtGui.QStyle.SP_DirOpenIcon)
     self.action_load = self.__toolbar.addAction(loadIcon, "load file")
+    self.action_load.setShortcut(QtGui.QKeySequence.Open)
+
     reloadIcon = style.standardIcon(QtGui.QStyle.SP_BrowserReload)
     self.action_reload = self.__toolbar.addAction(reloadIcon, "reload file")
+    self.action_reload.setShortcut(QtGui.QKeySequence.Refresh)
     self.__toolbar.addSeparator()
 
     pauseIcon = style.standardIcon(QtGui.QStyle.SP_MediaPause)
     self.action_play = self.__toolbar.addAction(pauseIcon, "play / pause")
+    self.action_play.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space))
+    self.action_play.setCheckable(True)
 
     self.clean()
     self.update()
