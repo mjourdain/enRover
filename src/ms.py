@@ -30,8 +30,11 @@ class MS(Station):
 
     self.__bts_list = bts_list
 
-    # Initialize by choosing closest BTS
-    dists = [ (bts, self.distance_from(bts)) for bts in self.__bts_list ]
+    # Initialize by choosing closest BTS, ins desired network if possible
+    btss = [ bts for bts in self.__bts_list if bts.network == self.pref_network ]
+    if not btss:
+      btss = self.__bts_list
+    dists = [ (bts, self.distance_from(bts)) for bts in btss ]
     self.bts = min(dists, key=operator.itemgetter(1))[0]
 
     self.__bts_mutex.unlock()

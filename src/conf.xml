@@ -4,7 +4,7 @@
 
   <Mobile id="1"
           location="10m,10m"
-          network="GMS"
+          network="GSM"
           p="-50"/>
   <Mobile id="2"
           location="1km,3km"
