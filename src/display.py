@@ -81,3 +81,14 @@ class Display(QtGui.QMainWindow):
     # Update display from current map
     self.__label.setPixmap(self.__pix)
 
+  def resize_(self, width, height):
+    self.__paint = None
+    self.__pix = QtGui.QPixmap(width, height)
+    self.__paint = QtGui.QPainter(self.__pix)
+
+    self.__label = QtGui.QLabel()
+    self.__label.resize(width, height)
+
+    self.setCentralWidget(self.__label)
+    self.adjustSize()
+
