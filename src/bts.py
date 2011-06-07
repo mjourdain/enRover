@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+speed_light = 3 * 100000000
+
 from station import Station
 import math
 
