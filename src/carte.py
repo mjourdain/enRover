@@ -134,7 +134,7 @@ class Carte:
     """Resize map"""
     (self.__width, self.__height) = (width, height)
     self.__display.resize_(width, height)
-    self._refresh()
+    self.refresh()
 
 
 
