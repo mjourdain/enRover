@@ -91,6 +91,10 @@ class Carte:
       return
 
     xmldoc = xml.dom.minidom.parse(self.__filename)
+
+    self.resize(int(xmldoc.getElementsByTagName("Map")[0].getAttribute("size").split(",")[0]),
+    int(xmldoc.getElementsByTagName("Map")[0].getAttribute("size").split(",")[1]))
+
     px = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("px"))
     meters = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("meters"))
 
@@ -105,7 +109,10 @@ class Carte:
         int(node.getAttribute("max_ms_range")),
         int(node.getAttribute("l_rxqual_h")),
         int(node.getAttribute("l_rxlev_dl_h")),
-        int(node.getAttribute("l_rxlev_up_h"))))
+        int(node.getAttribute("l_rxlev_up_h")),
+        int(node.getAttribute("pe")),
+        int(node.getAttribute("ge")),
+        int(node.getAttribute("f"))))
     
     for node in xmldoc.getElementsByTagName("Mobile"):
       if (node.getAttribute("location") != ""):
@@ -115,7 +122,8 @@ class Carte:
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
       self.add(MS(msX, msY, node.getAttribute("network"),
-          node.getAttribute("p")))
+          node.getAttribute("p"), node.getAttribute("pe"),
+          node.getAttribute("ge")))
 
   def resize(self, width, height):
     (self.__width, self.__height) = (width, height)
@@ -125,7 +133,6 @@ class Carte:
 
 
 def getInPx(axis, px, meters):
-  print(axis)
   if (axis.find("km") >= 0):
     axis = axis.replace("km","")
     return 1000 * int(axis) * px / meters

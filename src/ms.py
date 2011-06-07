@@ -4,13 +4,18 @@
 import random
 
 class MS:
-  def __init__(self, x, y, network, p):
+
+  speed_light = 3 * 100000000
+
+  def __init__(self, x, y, network, p, pe, ge):
     self.__bts_list = set()
     self.bts = None
     self.pos_x = x
     self.pos_y = y
     self.pref_network = network
     self.p = p
+    self.pe = pe
+    self.ge = ge
     self.__last_move = random.randint(0, 7)
 
   def update_bts_list(self, bts_list):
@@ -59,6 +64,24 @@ class MS:
       self.pos_y = max_y
       self.__last_move = (self.__last_move + 4) % 8
 
+  def handover():
+    #TODO every 480ms
+    measure()
+
+  def measure():
+    distanceMsBtsPow2 = pow(self.x - self.bts.x, 2) + pow(self.y - self.bts.y, 2)
+    #friis formula
+    rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
+    rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.bts.pe * distanveMsBtsPow2)
+    
+    #C/I
+    for aBts in self.__bts_list:
+      if (aBts.f == self.bts.f):
+        I += pow(10, aBts.pe/10)
+    cOverI = self.pe / (10 * math.log10(I))
 
 
+#def getRxQualFromCOverI(cOverI):
+  
 
+        
