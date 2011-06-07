@@ -135,8 +135,8 @@ class Carte:
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
       self.add(MS(msX, msY, node.getAttribute("network"),
-          node.getAttribute("p"), node.getAttribute("pe"),
-          node.getAttribute("ge")))
+          int(node.getAttribute("p")), int(node.getAttribute("pe")),
+          int(node.getAttribute("ge"))))
 
   def resize(self, width, height):
     """Resize map"""

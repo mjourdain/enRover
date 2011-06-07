@@ -5,6 +5,9 @@ from station import Station
 from PyQt4 import QtCore
 import random
 import operator
+import math
+
+speed_light = 3 * 100000000
 
 class MS(Station):
   """Represent a Mobile Station"""
@@ -87,13 +90,14 @@ class MS(Station):
     if self.bts is None:
       return
 
-    distanceMsBtsPow2 = pow(self.pos_x - self.bts.pos_x, 2) + pow(self.pos_y -
-self.bts.pos_y, 2)
+    distanceMsBtsPow2 = self.squared_distance_from(self.bts)
     #friis formula
     rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
-    rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.bts.pe * distanveMsBtsPow2)
+    rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 *
+math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
     
     #C/I
+    I = 0
     for aBts in self.__bts_list:
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10)
