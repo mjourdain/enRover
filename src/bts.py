@@ -21,3 +21,8 @@ class BTS(Station):
     self.ge = ge
     self.f = f
 
+    #squared_range = Gt * pow(c / f / 4 / math.pi, 2) / -120 * pt
+    #self.nominal_range = math.sqrt(squared_range)
+    self.nominal_range = 42
+    print self.nominal_range
+
