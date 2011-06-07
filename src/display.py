@@ -6,6 +6,8 @@ from ms import MS
 from bts import BTS
 
 class Display(QtGui.QMainWindow):
+  """Map display class"""
+
   def __init__(self, width, height):
     QtGui.QMainWindow.__init__(self)
 
@@ -46,17 +48,18 @@ class Display(QtGui.QMainWindow):
     self.update()
 
   def clean(self):
-    # Clean BTS painter
+    """Clean BTS painter"""
     self.__pix.fill(QtGui.QColor(191, 191, 191))
 
   def draw(self, elem, color):
+    """Draw an element"""
     if isinstance(elem, BTS):
       self.__draw_bts(elem, color)
     elif isinstance(elem, MS):
       self.__draw_ms(elem, color)
 
   def __draw_bts(self, bts, color):
-    # Draw a BTS
+    """Draw a BTS"""
     self.__bts_pen.setColor(color)
     self.__paint.setPen(self.__bts_pen)
     self.__paint.drawLine(bts.pos_x, bts.pos_y, bts.pos_x, bts.pos_y - 6)
@@ -68,7 +71,7 @@ class Display(QtGui.QMainWindow):
       self.__paint.drawText(bts.pos_x+5, bts.pos_y+5, "U")
 
   def __draw_ms(self, ms, color):
-    # Draw a MS
+    """Draw a MS"""
     self.__ms_pen1.setColor(color)
     self.__paint.setPen(self.__ms_pen1)
     self.__paint.drawEllipse(ms.pos_x-2, ms.pos_y-2, 5, 5)
@@ -78,10 +81,11 @@ class Display(QtGui.QMainWindow):
       self.__paint.drawEllipse(ms.pos_x-5, ms.pos_y-5, 11, 11)
 
   def update(self):
-    # Update display from current map
+    """Update display from current map"""
     self.__label.setPixmap(self.__pix)
 
   def resize_(self, width, height):
+    """Resize display size"""
     self.__paint = None
     self.__pix = QtGui.QPixmap(width, height)
     self.__paint = QtGui.QPainter(self.__pix)

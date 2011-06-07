@@ -4,6 +4,7 @@
 import random
 
 class MS:
+  """Represent a Mobile Station"""
   def __init__(self, x, y, network, p):
     self.__bts_list = set()
     self.bts = None
@@ -14,13 +15,14 @@ class MS:
     self.__last_move = random.randint(0, 7)
 
   def update_bts_list(self, bts_list):
+    """Update known Base Transmiter Station list"""
     self.__bts_list = bts_list
 
     # TODO
     self.bts = random.choice(list(bts_list))
 
   def random_move(self, max_x, max_y):
-    # Move MS randomly
+    """Move Mobile Station randomly"""
     dir_change = random.randint(0, 300)
 
     # Change direction ?
@@ -58,7 +60,4 @@ class MS:
     elif self.pos_y > max_y:
       self.pos_y = max_y
       self.__last_move = (self.__last_move + 4) % 8
-
-
-
 
