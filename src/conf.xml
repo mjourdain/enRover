@@ -1,0 +1,68 @@
+<configuration map="800,600">
+  <Scale px="1"
+         meters="10"/>
+
+  <Mobile id="1"
+          location="10m,10m"
+          network="GMS"
+          p="-50"/>
+  <Mobile id="2"
+          location="1km,3km"
+          network="GSM"
+          p="-50"/>
+  <Mobile id="3"
+          network="UMTS"
+          p="-50"/>
+  <Mobile id="4"
+          location="2km,6km"
+          network="UMTS"
+          p="-50"/>
+
+
+  <Bts id="1"
+       location="4000m,4000m"
+       network="GSM"
+       ho_margin="-40"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="3"
+       l_rxqual_h="5"
+       l_rxlev_dl_h="-90"
+       l_rxlev_up_h="-90"/>
+  <Bts id="2"
+       location="0km,1km"
+       network="UMTS"
+       ho_margin="-40"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="3"
+       l_rxqual_h="5"
+       l_rxlev_dl_h="-90"
+       l_rxlev_up_h="-90"/>
+
+  <Bts id="3"
+       location="300m,1200m"
+       network="UMTS"
+       ho_margin="-40"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="3"
+       l_rxqual_h="5"
+       l_rxlev_dl_h="-90"
+       l_rxlev_up_h="-90"/>
+  <Bts id="4"
+       location="5km,5km"
+       network="UMTS"
+       ho_margin="-40"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="3"
+       l_rxqual_h="5"
+       l_rxlev_dl_h="-90"
+       l_rxlev_up_h="-90"/>
+
+</configuration>

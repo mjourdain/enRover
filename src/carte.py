@@ -80,7 +80,7 @@ class Carte:
     if not filename:
       filename = QtGui.QFileDialog.getOpenFileName(filter="XML files(*.xml);;All files(*)")
 
-    self.__filename = filename
+    self.__filename = str(filename)
     self.__load_file()
 
   def reload_file(self):
@@ -99,14 +99,14 @@ class Carte:
         meters), getInPx(node.getAttribute("location").split(",")[1], px,
         meters), node.getAttribute("network"),
         int(node.getAttribute("ho_margin")),
-        int(node.getAttribute("ms_txpwr_max"))),
+        int(node.getAttribute("ms_txpwr_max")),
         int(node.getAttribute("bts_txpwr_max")),
         int(node.getAttribute("rxlev_min")),
         int(node.getAttribute("max_ms_range")),
         int(node.getAttribute("l_rxqual_h")),
         int(node.getAttribute("l_rxlev_dl_h")),
-        int(node.getAttribute("l_rxlev_up_h")))
-
+        int(node.getAttribute("l_rxlev_up_h"))))
+    
     for node in xmldoc.getElementsByTagName("Mobile"):
       if (node.getAttribute("location") != ""):
         msX = getInPx(node.getAttribute("location").split(",")[0], px, meters)
@@ -114,7 +114,7 @@ class Carte:
       else: #TODO dynamic size, depending on xml values
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
-        self.add(MS(msX, msY, node.getAttribute("network"),
+      self.add(MS(msX, msY, node.getAttribute("network"),
           node.getAttribute("p")))
 
   def resize(self, width, height):
