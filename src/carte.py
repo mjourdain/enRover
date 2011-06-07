@@ -51,7 +51,6 @@ class Carte:
 
     self.refresh()
 
-
   def refresh(self):
     """Refresh map display"""
     self.__display.clean()
