@@ -13,10 +13,10 @@
   -->
   <Mobile id="1"
           location="10m,10m"
-          network="GMS"
-          p="-50"
+          network="GSM"
           pe="-50"
-          ge="5"/>
+          ge="5"
+          p="-50"/>
   <Mobile id="2"
           location="1km,3km"
           network="GSM"

@@ -1,31 +1,48 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from station import Station
+from PyQt4 import QtCore
 import random
+import operator
 
-class MS:
-
-  speed_light = 3 * 100000000
-
+class MS(Station):
+  """Represent a Mobile Station"""
   def __init__(self, x, y, network, p, pe, ge):
+    Station.__init__(self, x, y)
     self.__bts_list = set()
     self.bts = None
-    self.pos_x = x
-    self.pos_y = y
     self.pref_network = network
     self.p = p
     self.pe = pe
     self.ge = ge
+
+    self.__bts_mutex = QtCore.QMutex()
+
     self.__last_move = random.randint(0, 7)
 
+    self.__handover_timer = QtCore.QTimer()
+    self.__handover_timer.timeout.connect(self.measure)
+    self.__handover_timer.setInterval(480)
+    self.__handover_timer.start()
+
   def update_bts_list(self, bts_list):
+    """Update known Base Transmiter Station list"""
+    self.__bts_mutex.lock()
+
     self.__bts_list = bts_list
 
-    # TODO
-    self.bts = random.choice(list(bts_list))
+    # Initialize by choosing closest BTS, ins desired network if possible
+    btss = [ bts for bts in self.__bts_list if bts.network == self.pref_network ]
+    if not btss:
+      btss = self.__bts_list
+    dists = [ (bts, self.distance_from(bts)) for bts in btss ]
+    self.bts = min(dists, key=operator.itemgetter(1))[0]
+
+    self.__bts_mutex.unlock()
 
   def random_move(self, max_x, max_y):
-    # Move MS randomly
+    """Move Mobile Station randomly"""
     dir_change = random.randint(0, 300)
 
     # Change direction ?
@@ -64,12 +81,14 @@ class MS:
       self.pos_y = max_y
       self.__last_move = (self.__last_move + 4) % 8
 
-  def handover():
-    #TODO every 480ms
-    measure()
+  def measure(self):
+    self.__bts_mutex.lock()
 
-  def measure():
-    distanceMsBtsPow2 = pow(self.x - self.bts.x, 2) + pow(self.y - self.bts.y, 2)
+    if self.bts is None:
+      return
+
+    distanceMsBtsPow2 = pow(self.pos_x - self.bts.pos_x, 2) + pow(self.pos_y -
+self.bts.pos_y, 2)
     #friis formula
     rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
     rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.bts.pe * distanveMsBtsPow2)
@@ -80,8 +99,9 @@ class MS:
         I += pow(10, aBts.pe/10)
     cOverI = self.pe / (10 * math.log10(I))
 
-
-#def getRxQualFromCOverI(cOverI):
+    self.__bts_mutex.unlock()
   
 
-        
+
+
+#def getRxQualFromCOverI(cOverI):

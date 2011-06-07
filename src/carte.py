@@ -11,6 +11,7 @@ from xml.dom.minidom import Node
 
 
 class Carte:
+  """Represent a map containing BTS and MS"""
   def __init__(self, width=800, height=600):
     (self.__width, self.__height) = (width, height)
     self.__display = Display(width, height)
@@ -30,6 +31,7 @@ class Carte:
     self.__display.show()
 
   def add(self, elem):
+    """Add an element on map"""
     # Add a BTS and update all MS
     if isinstance(elem, BTS):
       idx_color = sum([ e.network == elem.network for e in self.__bts ])
@@ -37,7 +39,7 @@ class Carte:
       self.__bts[elem] = QtGui.QColor(*color)
       bts_set = set(self.__bts.keys())
       for ms in self.__ms:
-        ms.update_bts_set(bts_set)
+        ms.update_bts_list(bts_set)
 
     # Add a MS and update it with BTS list
     elif isinstance(elem, MS):
@@ -47,9 +49,11 @@ class Carte:
     else:
       return
 
-    self.__update_display()
+    self.refresh()
 
-  def __update_display(self):
+
+  def refresh(self):
+    """Refresh map display"""
     self.__display.clean()
 
     for (bts, color) in self.__bts.iteritems():
@@ -59,37 +63,47 @@ class Carte:
 
     self.__display.update()
 
-  def refresh(self):
-    self.__update_display()
-
   def movems(self):
+    """Move all MS"""
     for ms in self.__ms:
       ms.random_move(self.__width-1, self.__height-1)
-    self.__update_display()
+    self.refresh()
 
   def start_moving_ms(self):
+    """Start movin MS on map"""
     self.__move_timer.start()
 
   def toggle_moving_ms(self):
+    """Toggle MS movig state"""
     if self.__move_timer.isActive():
       self.__move_timer.stop()
     else:
       self.__move_timer.start()
 
   def load_file(self, filename=None):
+    """Load an xml file"""
     if not filename:
-      filename = QtGui.QFileDialog.getOpenFileName()
+      file_filter = "XML files(*.xml);;All files(*)"
+      filename = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
 
     self.__filename = str(filename)
     self.__load_file()
 
   def reload_file(self):
+    """Reload current xml file"""
     self.__load_file()
 
   def __load_file(self):
+    """Load current xml file"""
     if not self.__filename:
       return
 
+    # reset map
+    self.__bts = {}
+    self.__ms = set()
+    self.__color_index = 0
+
+    # load the new map
     xmldoc = xml.dom.minidom.parse(self.__filename)
 
     self.resize(int(xmldoc.getElementsByTagName("Map")[0].getAttribute("size").split(",")[0]),
@@ -126,13 +140,15 @@ class Carte:
           node.getAttribute("ge")))
 
   def resize(self, width, height):
+    """Resize map"""
     (self.__width, self.__height) = (width, height)
     self.__display.resize_(width, height)
-    self.__update_display()
+    self.refresh()
 
 
 
 def getInPx(axis, px, meters):
+  """Transorm a distance value into a distance in pixels"""
   if (axis.find("km") >= 0):
     axis = axis.replace("km","")
     return 1000 * int(axis) * px / meters
@@ -144,6 +160,7 @@ def getInPx(axis, px, meters):
 
 
 def get_color(idx, low_value = False):
+  """Get sequential colors from index"""
   if not low_value:
     saturation = 1
     value = 1
@@ -160,6 +177,7 @@ def get_color(idx, low_value = False):
 
 
 def hsv2rgb(hue, saturation, value):
+  """Transform hsv color (360, 1, 1) into rgb color (255, 255, 255)"""
   if (hue < 0) or (hue > 360):
     return (0, 0, 0)
   if (saturation < 0) or (saturation > 1):
