@@ -90,8 +90,6 @@ class Carte:
     if not self.__filename:
       return
 
-    print self.__filename
-
     xmldoc = xml.dom.minidom.parse(self.__filename)
     px = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("px"))
     meters = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("meters"))
@@ -119,6 +117,11 @@ class Carte:
       self.add(MS(msX, msY, node.getAttribute("network"),
           node.getAttribute("p")))
 
+  def resize(self, width, height):
+    (self.__width, self.__height) = (width, height)
+    self.__display.resize_(width, height)
+    self.__update_display()
+
 
 
 def getInPx(axis, px, meters):
@@ -131,7 +134,7 @@ def getInPx(axis, px, meters):
     return int(axis) * px / meters
   else:
     return int(axis)
-    
+
 
 def get_color(idx, low_value = False):
   if not low_value:
