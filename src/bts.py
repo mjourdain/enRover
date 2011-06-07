@@ -13,7 +13,7 @@ class BTS(Station):
   def __init__(self, x, y, network, ho_margin, ms_txpwr_max, bts_txpwr_max,
   rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h, pe, ge, f):
     Station.__init__(self, x, y)
-    self.__ms_list = set()
+    self.ms_list = set()
     self.network = network
     self.ho_margin = ho_margin
     self.ms_txpwr_max = ms_txpwr_max
@@ -29,8 +29,8 @@ class BTS(Station):
 
     squared_range = ge * pow(speed_light / f / 4 / math.pi, 2) / -120 * pe
 
-    print self.nominal_range
     self.nominal_range = 42
+    print self.nominal_range
 
   def link(self, ms):
     """Link a MS"""
