@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from station import Station
 import random
+import operator
 
-class MS:
+class MS(Station):
   """Represent a Mobile Station"""
   def __init__(self, x, y, network, p):
+    Station.__init__(self, x, y)
     self.__bts_list = set()
     self.bts = None
-    self.pos_x = x
-    self.pos_y = y
     self.pref_network = network
     self.p = p
     self.__last_move = random.randint(0, 7)
@@ -18,8 +19,9 @@ class MS:
     """Update known Base Transmiter Station list"""
     self.__bts_list = bts_list
 
-    # TODO
-    self.bts = random.choice(list(bts_list))
+    # Initialize by choosing closest BTS
+    dists = [ (bts, self.distance_from(bts)) for bts in self.__bts_list ]
+    self.bts = min(dists, key=operator.itemgetter(1))[0]
 
   def random_move(self, max_x, max_y):
     """Move Mobile Station randomly"""
