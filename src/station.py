@@ -8,6 +8,7 @@ class Station:
     self.pos_y = y
 
   def distance_from(self, elem):
-    """Get distance from an Element"""
-    return (self.pos_x - elem.pos_x)**2 + (self.pos_y - elem.pos_y)**2
+    """Get distance from another station"""
+    if isinstance(elem, Station):
+      return (self.pos_x - elem.pos_x)**2 + (self.pos_y - elem.pos_y)**2
 

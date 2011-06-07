@@ -62,9 +62,9 @@ class Display(QtGui.QMainWindow):
     """Draw a BTS"""
     self.__bts_pen.setColor(color)
     self.__paint.setPen(self.__bts_pen)
-    self.__paint.drawLine(bts.pos_x, bts.pos_y, bts.pos_x, bts.pos_y - 6)
-    self.__paint.drawLine(bts.pos_x, bts.pos_y - 6, bts.pos_x - 3, bts.pos_y - 8)
-    self.__paint.drawLine(bts.pos_x, bts.pos_y - 6, bts.pos_x + 3, bts.pos_y - 8)
+    self.__paint.drawLine(bts.pos_x, bts.pos_y, bts.pos_x, bts.pos_y-6)
+    self.__paint.drawLine(bts.pos_x, bts.pos_y-6, bts.pos_x-3, bts.pos_y-8)
+    self.__paint.drawLine(bts.pos_x, bts.pos_y-6, bts.pos_x+3, bts.pos_y-8)
     if bts.network == "GSM":
       self.__paint.drawText(bts.pos_x+5, bts.pos_y+5, "G")
     else:

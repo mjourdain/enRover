@@ -83,7 +83,8 @@ class Carte:
   def load_file(self, filename=None):
     """Load an xml file"""
     if not filename:
-      filename = QtGui.QFileDialog.getOpenFileName(filter="XML files(*.xml);;All files(*)")
+      file_filter = "XML files(*.xml);;All files(*)"
+      filename = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
 
     self.__filename = str(filename)
     self.__load_file()
