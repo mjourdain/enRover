@@ -102,10 +102,32 @@ math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10)
     cOverI = self.pe / (10 * math.log10(I))
+    
+    rxqual_dl = getRxQualFromCOverI(cOverI)
+
+    #I = 0
+    #for aMs in self.bts.list_ms:
+      #if (aMs.bts.f == self.bts.f)
+        #I += pow(10, aMs.pe)
+    #cOverI = self.pe / (10 * math.log10(I))
+
+    #rxqual_up = getRxQualFromCOverI(cOverI)
 
     self.__bts_mutex.unlock()
   
-
-
-
-#def getRxQualFromCOverI(cOverI):
+def getRxQualFromCOverI(cOverI):
+  if (cOverI < 1):
+    return 7;
+  elif (cOverI < 3):
+    return 6
+  elif (cOverI < 4.5):
+    return 5
+  elif (cOverI < 5):
+    return 4
+  elif (cOverI < 6.5):
+    return 3
+  elif (cOverI < 7.5):
+    return 2
+  elif (cOverI < 15):
+    return 1
+  return 0

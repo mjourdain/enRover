@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+speed_light = 3 * 100000000
+
 from station import Station
 
 class BTS(Station):
@@ -20,6 +22,9 @@ class BTS(Station):
     self.pe = pe
     self.ge = ge
     self.f = f
+
+    self.nominal_range = sqrt(self.pe * self.ge * pow((speed_light / self.f) /
+(4 * math.pi), 2) / -120)
 
     #squared_range = Gt * pow(c / f / 4 / math.pi, 2) / -120 * pt
     #self.nominal_range = math.sqrt(squared_range)
