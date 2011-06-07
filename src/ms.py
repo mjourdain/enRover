@@ -5,22 +5,27 @@ from station import Station
 from PyQt4 import QtCore
 import random
 import operator
+import math
+
+speed_light = 3 * 100000000
 
 class MS(Station):
   """Represent a Mobile Station"""
-  def __init__(self, x, y, network, p):
+  def __init__(self, x, y, network, p, pe, ge):
     Station.__init__(self, x, y)
     self.__bts_list = set()
     self.bts = None
     self.pref_network = network
     self.p = p
+    self.pe = pe
+    self.ge = ge
 
     self.__bts_mutex = QtCore.QMutex()
 
     self.__last_move = random.randint(0, 7)
 
     self.__handover_timer = QtCore.QTimer()
-    self.__handover_timer.timeout.connect(self.handover)
+    self.__handover_timer.timeout.connect(self.measure)
     self.__handover_timer.setInterval(480)
     self.__handover_timer.start()
 
@@ -79,12 +84,28 @@ class MS(Station):
       self.pos_y = max_y
       self.__last_move = (self.__last_move + 4) % 8
 
-  def handover(self):
-    """Check if we need do do an handover"""
+  def measure(self):
     self.__bts_mutex.lock()
 
     if self.bts is None:
       return
 
-    self.__bts_mutex.unlock()
+    distanceMsBtsPow2 = self.squared_distance_from(self.bts)
+    #friis formula
+    rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
+    rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 *
+math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
+    
+    #C/I
+    I = 0
+    for aBts in self.__bts_list:
+      if (aBts.f == self.bts.f):
+        I += pow(10, aBts.pe/10)
+    cOverI = self.pe / (10 * math.log10(I))
 
+    self.__bts_mutex.unlock()
+  
+
+
+
+#def getRxQualFromCOverI(cOverI):

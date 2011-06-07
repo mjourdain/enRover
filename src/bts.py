@@ -6,7 +6,7 @@ from station import Station
 class BTS(Station):
   """Represent a Base Transmiter Station"""
   def __init__(self, x, y, network, ho_margin, ms_txpwr_max, bts_txpwr_max,
-  rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h):
+  rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h, pe, ge, f):
     Station.__init__(self, x, y)
     self.network = network
     self.ho_margin = ho_margin
@@ -17,6 +17,9 @@ class BTS(Station):
     self.l_rxqual_h = l_rxqual_h
     self.l_rxlev_dl_h = l_rxlev_dl_h
     self.l_rxlev_up_h = l_rxlev_up_h
+    self.pe = pe
+    self.ge = ge
+    self.f = f
 
     #squared_range = Gt * pow(c / f / 4 / math.pi, 2) / -120 * pt
     #self.nominal_range = math.sqrt(squared_range)
