@@ -27,11 +27,10 @@ class BTS(Station):
     self.ge = ge
     self.f = f
 
-    #log_range = (ge + pe)/20. + 7.378 - math.log10(f)
-    #self.nominal_range = pow(10, log_range) / scale
-    log_range = (- 32.44 - 20 * math.log10(f) + ge + 120 + pe)/20
-    self.nominal_range = pow(10, log_range) * 1000 / scale
-    print self.nominal_range
+    log_range = (ge + pe)/20. + 7.378 - math.log10(f)
+    self.nominal_range = pow(10, log_range) / scale
+    #log_range = (- 32.44 - 20 * math.log10(f) + ge + 120 + pe)/20
+    #self.nominal_range = pow(10, log_range) * 1000 / scale
 
   def link(self, ms):
     """Link a MS"""
