@@ -52,7 +52,7 @@ cell [dBm]
       pe : emission power [dBm]
       ge : emission gain [dB]
       f : emission frequency [MHz]
-  />    
+  />
   -->
 
   <Bts id="1"
