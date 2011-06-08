@@ -40,9 +40,17 @@ class MS(Station):
     if not btss:
       btss = self.__bts_list
     dists = [ (bts, self.distance_from(bts)) for bts in btss ]
-    self.bts = min(dists, key=operator.itemgetter(1))[0]
+    self.select_bts(min(dists, key=operator.itemgetter(1))[0])
 
     self.__bts_mutex.unlock()
+
+  def select_bts(self, bts):
+    """Select a BTS"""
+    if self.bts:
+      self.bts.unlink(self)
+    self.bts = bts
+    self.bts.link(self)
+
 
   def random_move(self, max_x, max_y):
     """Move Mobile Station randomly"""
@@ -95,7 +103,7 @@ class MS(Station):
     rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
     rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 *
 math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
-    
+
     #C/I
     I = 0
     for aBts in self.__bts_list:
@@ -104,6 +112,9 @@ math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
     cOverI = self.pe / (10 * math.log10(I))
     
     rxqual_dl = getRxQualFromCOverI(cOverI)
+
+    self.__bts_mutex.unlock()
+
 
     #I = 0
     #for aMs in self.bts.list_ms:

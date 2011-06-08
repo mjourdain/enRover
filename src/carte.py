@@ -22,7 +22,7 @@ class Carte:
 
     self.__display.action_load.triggered.connect(self.load_file)
     self.__display.action_reload.triggered.connect(self.reload_file)
-    self.__display.action_play.triggered.connect(self.toggle_moving_ms)
+    self.__display.action_play.triggered.connect(self.__update_moving_ms)
 
     self.__move_timer = QtCore.QTimer()
     self.__move_timer.timeout.connect(self.movems)
@@ -72,9 +72,9 @@ class Carte:
     """Start movin MS on map"""
     self.__move_timer.start()
 
-  def toggle_moving_ms(self):
-    """Toggle MS movig state"""
-    if self.__move_timer.isActive():
+  def __update_moving_ms(self):
+    """Update MS movig state according to interface"""
+    if self.__display.action_play.isChecked():
       self.__move_timer.stop()
     else:
       self.__move_timer.start()
@@ -83,7 +83,10 @@ class Carte:
     """Load an xml file"""
     if not filename:
       file_filter = "XML files(*.xml);;All files(*)"
-      filename = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
+      fname = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
+
+      if not filename:
+        return
 
     self.__filename = str(filename)
     self.__load_file()
