@@ -11,7 +11,7 @@ speed_light = 300000000
 class BTS(Station):
   """Represent a Base Transmiter Station"""
   def __init__(self, x, y, network, ho_margin, ms_txpwr_max, bts_txpwr_max,
-  rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h, pe, ge, f):
+  rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h, pe, ge, f, scale):
     Station.__init__(self, x, y)
     self.ms_list = set()
     self.network = network
@@ -27,9 +27,10 @@ class BTS(Station):
     self.ge = ge
     self.f = f
 
-    squared_range = ge * pow(speed_light / f / 4 / math.pi, 2) / -120 * pe
-
-    self.nominal_range = 42
+    #log_range = (ge + pe)/20. + 7.378 - math.log10(f)
+    #self.nominal_range = pow(10, log_range) / scale
+    log_range = (- 32.44 - 20 * math.log10(f) + ge + 120 + pe)/20
+    self.nominal_range = pow(10, log_range) * 1000 / scale
     print self.nominal_range
 
   def link(self, ms):
