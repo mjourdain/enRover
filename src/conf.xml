@@ -66,7 +66,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="925"/>
   <Bts id="2"
@@ -80,7 +80,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="900"/>
 
@@ -95,7 +95,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="900"/>
   <Bts id="4"
@@ -109,7 +109,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="925"/>
   <Bts id="5"
@@ -123,7 +123,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="950"/>
   <Bts id="6"
@@ -137,7 +137,7 @@ cell [dBm]
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
-       pe="-50"
+       pe="-30"
        ge="5"
        f="950"/>
 </configuration>

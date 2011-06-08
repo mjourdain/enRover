@@ -8,8 +8,10 @@ import operator
 import math
 
 speed_light = 3 * 100000000
+nbsamples = 0
 
 class MS(Station):
+
   """Represent a Mobile Station"""
   def __init__(self, x, y, network, p, pe, ge):
     Station.__init__(self, x, y)
@@ -95,36 +97,50 @@ class MS(Station):
   def measure(self):
     self.__bts_mutex.lock()
 
+    nbsamples + 1
+
     if self.bts is None:
       return
 
-    distanceMsBtsPow2 = self.squared_distance_from(self.bts)
-    #friis formula
-    rxlev_dl = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 * math.pi), 2) / (self.pe * distanceMsBtsPow2)
-    rxlev_up = self.ge * self.bts.ge * pow(speed_light / (self.bts.f * 4 *
-math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
+    #Distances
+    distanceMsBts = {}
+    for aBts in self.__bts_list:
+      distanceMsBts[aBts] = self.distance_from(aBts)
 
-    #C/I
+    #rx_lev
+    rxlev_dl = self.ge + self.bts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts]))
+    rxlev_up = self.ge + self.bts.ge - self.bts.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts]))
+
+    #rx_qual
     I = 0
     for aBts in self.__bts_list:
       if (aBts.f == self.bts.f):
-        I += pow(10, aBts.pe/10)
+        I += pow(10, aBts.pe/10.)
     cOverI = self.pe / (10 * math.log10(I))
     
     rxqual_dl = getRxQualFromCOverI(cOverI)
 
+    I = 0
+    for aMs in self.bts.ms_list:
+      if (aMs.bts.f == self.bts.f):
+        I += pow(10, aMs.pe)
+    cOverI = self.pe / (10 * math.log10(I))
+
+    rxqual_up = getRxQualFromCOverI(cOverI)
+
+    #rx_lev on other cells
+    rxlev_ncell = {}
+    for aBts in self.__bts_list:
+      rxlev_ncell[aBts] = self.ge + aBts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(aBts.f * 1000000)) - (20 * math.log10(4 * math.pi * self.distance_from(aBts)))
+
+    
+    if (nbsamples % 32 == 0):
+      self.meanValues()
+
     self.__bts_mutex.unlock()
 
-
-    #I = 0
-    #for aMs in self.bts.list_ms:
-      #if (aMs.bts.f == self.bts.f)
-        #I += pow(10, aMs.pe)
-    #cOverI = self.pe / (10 * math.log10(I))
-
-    #rxqual_up = getRxQualFromCOverI(cOverI)
-
-    self.__bts_mutex.unlock()
+  def meanValues(self):
+    return
   
 def getRxQualFromCOverI(cOverI):
   if (cOverI < 1):

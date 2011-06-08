@@ -1,13 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-speed_light = 3 * 100000000
 
 import math
 from station import Station
 import math
 
-speed_light = 300000000
+speed_light = 300000000.
 
 class BTS(Station):
   """Represent a Base Transmiter Station"""
@@ -28,10 +27,12 @@ class BTS(Station):
     self.ge = ge
     self.f = f
 
-    #log_range = (ge + pe)/20. + 7.378 - math.log10(f)
-    #self.nominal_range = pow(10, log_range) / scale
-    log_range = (- 32.44 - 20 * math.log10(f) + ge + 120 + pe)/20
-    self.nominal_range = pow(10, log_range) * 1000 / scale
+    log_range = (ge + pe)/20. + 7.378 - math.log10(f)
+    self.nominal_range = pow(10, log_range) / scale
+    #log_range = (- 32.44 - 20 * math.log10(f) + ge + 120 + pe)/20
+    #self.nominal_range = pow(10, log_range) * 1000 / scale
+
+
     print self.nominal_range
 
   def link(self, ms):
