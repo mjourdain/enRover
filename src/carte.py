@@ -113,6 +113,7 @@ class Carte:
 
     px = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("px"))
     meters = int(xmldoc.getElementsByTagName("Scale")[0].getAttribute("meters"))
+    scale = float(meters)/px
 
     for node in xmldoc.getElementsByTagName("Bts"):
       self.add(BTS(getInPx(node.getAttribute("location").split(",")[0], px,
@@ -128,8 +129,8 @@ class Carte:
         int(node.getAttribute("l_rxlev_up_h")),
         int(node.getAttribute("pe")),
         int(node.getAttribute("ge")),
-        int(node.getAttribute("f"))))
-    
+        int(node.getAttribute("f")), scale))
+
     for node in xmldoc.getElementsByTagName("Mobile"):
       if (node.getAttribute("location") != ""):
         msX = getInPx(node.getAttribute("location").split(",")[0], px, meters)
