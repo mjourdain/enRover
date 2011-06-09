@@ -13,8 +13,8 @@ speed_light = 3 * 100000000
 class MS(Station):
 
   """Represent a Mobile Station"""
-  def __init__(self, x, y, network, p, pe, ge):
-    Station.__init__(self, x, y)
+  def __init__(self, station_id, x, y, network, p, pe, ge):
+    Station.__init__(self, station_id, x, y)
     self.__bts_list = set()
     self.bts = None
     self.pref_network = network
@@ -41,8 +41,12 @@ class MS(Station):
 
     self.__handover_timer = QtCore.QTimer()
     self.__handover_timer.timeout.connect(self.measure)
-    self.__handover_timer.setInterval(480)
+    self.set_speed(1)
     self.__handover_timer.start()
+
+  def set_speed(self, speed):
+    """Set map speed"""
+    self.__handover_timer.setInterval(480/pow(2, speed-1))
 
   def update_bts_list(self, bts_list):
     """Update known Base Transmiter Station list"""
@@ -112,6 +116,7 @@ class MS(Station):
     self.__bts_mutex.lock()
 
     if self.bts is None:
+      self.__bts_mutex.unlock()
       return
 
     self.__nbsamples += 1

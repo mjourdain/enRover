@@ -19,14 +19,18 @@ class Carte:
     self.__ms = set()
     self.__color_index = 0
     self.__filename = None
+    self.__speed = 1.
 
     self.__display.action_load.triggered.connect(self.load_file)
     self.__display.action_reload.triggered.connect(self.reload_file)
     self.__display.action_play.triggered.connect(self.__update_moving_ms)
+    self.__display.action_incSpeed.triggered.connect(lambda: self.change_speed(1))
+    self.__display.action_decSpeed.triggered.connect(lambda: self.change_speed(-1))
+    self.__display.speed_lineedit.editingFinished.connect(lambda: self.set_speed(float(self.__display.speed_lineedit.text())))
 
     self.__move_timer = QtCore.QTimer()
     self.__move_timer.timeout.connect(self.movems)
-    self.__move_timer.setInterval(50)
+    self.set_speed(1)
 
     self.__display.show()
 
@@ -44,6 +48,7 @@ class Carte:
     # Add a MS and update it with BTS list
     elif isinstance(elem, MS):
       self.__ms.add(elem)
+      elem.set_speed(self.__speed)
       elem.update_bts_list(set(self.__bts.keys()))
 
     else:
@@ -61,6 +66,22 @@ class Carte:
       self.__display.draw(ms, self.__bts[ms.bts])
 
     self.__display.update()
+
+  def change_speed(self, offset):
+    """Change map speed with offset"""
+    self.set_speed(self.__speed + offset)
+
+  def set_speed(self, speed):
+    """Set map speed"""
+    speed = float(min(5, max(0, speed)))
+
+    self.__move_timer.setInterval(800/pow(2, speed-1))
+    self.__speed = speed
+
+    for ms in self.__ms:
+      ms.set_speed(speed)
+
+    self.__display.speed_lineedit.setText(str(self.__speed))
 
   def movems(self):
     """Move all MS"""
@@ -118,9 +139,11 @@ class Carte:
     scale = float(meters)/px
 
     for node in xmldoc.getElementsByTagName("Bts"):
-      self.add(BTS(getInPx(node.getAttribute("location").split(",")[0], px,
-        meters), getInPx(node.getAttribute("location").split(",")[1], px,
-        meters), node.getAttribute("network"),
+      self.add(BTS(
+        int(node.getAttribute("id")),
+        getInPx(node.getAttribute("location").split(",")[0], px, meters),
+        getInPx(node.getAttribute("location").split(",")[1], px, meters),
+        node.getAttribute("network"),
         int(node.getAttribute("ho_margin")),
         int(node.getAttribute("ms_txpwr_max")),
         int(node.getAttribute("bts_txpwr_max")),
@@ -140,8 +163,12 @@ class Carte:
       else: #TODO dynamic size, depending on xml values
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
-      self.add(MS(msX, msY, node.getAttribute("network"),
-          int(node.getAttribute("p")), int(node.getAttribute("pe")),
+      self.add(MS(
+          int(node.getAttribute("id")),
+          msX, msY,
+          node.getAttribute("network"),
+          int(node.getAttribute("p")),
+          int(node.getAttribute("pe")),
           int(node.getAttribute("ge"))))
 
   def resize(self, width, height):
