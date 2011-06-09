@@ -34,6 +34,46 @@
           p="-50"
           pe="-50"
           ge="5"/>
+  <Mobile id="5"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="6"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="7"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="8"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="9"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="10"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="11"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
+  <Mobile id="12"
+          network="UMTS"
+          p="-50"
+          pe="-50"
+          ge="5"/>
 
   <!--
   <Bts id=""
@@ -45,7 +85,7 @@ cell [dBm]
        bts_txpwr_max: maximum emission power allowed to be used by the BTS in a
 cell [dBm]
       rxlev_min: electromagnetic field level to access to a cell [dBm]
-      max_ms_range: maximum distance between MS and BTS [km]
+      max_ms_range: maximum distance between MS and BTS [m]
       l_rxqual_h: minimum quality to allow handover
       l_rxlev_dl_h: minimum received level to allow handover on downlink [dBm]
       l_rxlev_up_h: minimum received level to allow handover on uplink [dBm]
@@ -62,7 +102,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
@@ -76,7 +116,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
@@ -91,7 +131,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
@@ -105,7 +145,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
@@ -119,7 +159,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"
@@ -133,7 +173,7 @@ cell [dBm]
        ms_txpwr_max="-60"
        bts_txpwr_max="-40"
        rxlev_min="-110"
-       max_ms_range="3"
+       max_ms_range="1500"
        l_rxqual_h="5"
        l_rxlev_dl_h="-90"
        l_rxlev_up_h="-90"

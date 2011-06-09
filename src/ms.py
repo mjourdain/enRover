@@ -22,17 +22,17 @@ class MS(Station):
     self.pe = pe
     self.ge = ge
 
+    self.__rxlev_dl = []
+    self.__rxlev_up = []
+    self.__rxqual_up = []
+    self.__rxqual_dl = []
+
     self.__nbsamples = -1
     self.__distanceMsBts = {}
     self.__rxlev_ncell = {}
     for aBts in self.__bts_list:
       self.__distanceMsBts[aBts] = []
       self.__rxlev_ncell[aBts] = []
-
-    self.__rxlev_dl = []
-    self.__rxlev_up = []
-    self.__rxqual_dl = []
-    self.__rxqual_up = []
 
 
     self.__bts_mutex = QtCore.QMutex()
@@ -201,7 +201,32 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
         rxlev_ncell_mean[aBts] += val
       rxlev_ncell_mean[aBts] /= 32
 
-    
+    pwr_c_d = self.bts.bts_txpwr_max - self.bts.pe
+    pgbt = {}
+    for aBts in self.__bts_list:
+      pgbt[aBts] = (min(self.bts.ms_txpwr_max, self.p) - rxlev_dl_mean - pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - rxlev_ncell_mean[aBts])
+
+    neighbour_list = []
+    for aBts in self.__bts_list:
+      pa = aBts.ms_txpwr_max - self.p
+      if (rxlev_ncell_mean[aBts] > (aBts.rxlev_min + max(self.p, pa))):
+        val_neighbour_list = pgbt[aBts] - self.bts.ho_margin
+        if (val_neighbour_list > 0):
+          neighbour_list.append((aBts, val_neighbour_list))
+    neighbour_list.sort(key = operator.itemgetter(1))
+
+    for btsTuple in neighbour_list:
+      if (rxlev_up_mean < self.bts.l_rxlev_up_h and rxlev_dl_mean < l_rxlev_dl_h
+and rxqual_up_mean > l_rxqual_h and rxqual_dl_mean > l_rxqual_h and
+distanceMsBts_mean[btsTuple[0]] > self.bts.max_ms_range and pgbt[btsTuple[0]] >
+self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
+        if(btsTuple[0] != self.bts):
+          print ("MS" + self.id + " handover from BTS" + self.bts.id + " to BTS"
++ self.btsTuple[0].id)
+          self.bts = btsTuple[0]
+          
+          
+
 
 
   
