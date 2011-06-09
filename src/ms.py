@@ -22,10 +22,10 @@ class MS(Station):
     self.pe = pe
     self.ge = ge
 
-    self.__nbsamples = 0
+    self.__nbsamples = -1
     self.__distanceMsBts = {}
     self.__rxlev_ncell = {}
-    for aBts in self.__bts_list
+    for aBts in self.__bts_list:
       self.__distanceMsBts[aBts] = []
       self.__rxlev_ncell[aBts] = []
 
@@ -114,13 +114,28 @@ class MS(Station):
     if self.bts is None:
       return
 
+    self.__nbsamples += 1
+
+    if (self.__nbsamples ==  32):
+      self.__nbsamples = 0
+      self.meanValues()
+    if (self.__nbsamples == 0):
+      for aBts in self.__bts_list:
+        self.__distanceMsBts[aBts] = []
+        self.__rxlev_ncell[aBts] = []
+
+
     #Distances
     for aBts in self.__bts_list:
       self.__distanceMsBts[aBts].append(self.distance_from(aBts))
 
     #rxlev
-    self.__rxlev_dl.append(self.ge + self.bts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts])))
-    self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts])))
+    self.__rxlev_dl.append(self.ge + self.bts.ge - self.pe + (20 *
+math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
+math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
+    self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 *
+math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
+math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
 
     #rxqual
     I = 0
@@ -143,48 +158,41 @@ class MS(Station):
     for aBts in self.__bts_list:
       self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(aBts.f * 1000000)) - (20 * math.log10(4 * math.pi * self.distance_from(aBts))))
 
-    self.__nbsamples += 1
-
-    if (self.__nbsamples % 32 == 0):
-      self.__nbsamples = 0
-      self.meanValues()
-      
-
 
     self.__bts_mutex.unlock()
 
   def meanValues(self):
     rxlev_dl_mean = 0
-    for val in self.__rxlev_dl
+    for val in self.__rxlev_dl:
       rxlev_dl_mean += val
     rxlev_dl_mean /= 32
 
     rxlev_up_mean = 0
-    for val in self.__rxlev_up
+    for val in self.__rxlev_up:
       rxlev_dl_mean += val
     rxlev_up_mean /= 32
 
     rxqual_dl_mean = 0
-    for val in self.__rxqual_dl
+    for val in self.__rxqual_dl:
       rxqual_dl_mean += val
     rxqual_dl_mean /= 32
 
     rxqual_up_mean = 0
-    for val in self.__rxqual_up
+    for val in self.__rxqual_up:
       rxqual_up_mean += val
     rxqual_up_mean /= 32
 
     distanceMsBts_mean = {}
-    for aBts in self.__bts_list
+    for aBts in self.__bts_list:
       distanceMsBts_mean[aBts] = 0
-      for val in self.__distanceBtsMs[aBts]
+      for val in self.__distanceMsBts[aBts]:
         distanceMsBts_mean[aBts] += val
       distanceMsBts_mean /= 32
 
     rxlev_ncell_mean = {}
-    for aBts in self.__bts_list
+    for aBts in self.__bts_list:
       rxlev_ncell_mean[aBts] = 0
-      for val in self.__rxlev_ncell[aBts]
+      for val in self.__rxlev_ncell[aBts]:
         rxlev_ncell_mean[aBts] += val
       rxlev_ncell_mean /= 32
 
