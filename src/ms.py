@@ -192,14 +192,14 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
       distanceMsBts_mean[aBts] = 0
       for val in self.__distanceMsBts[aBts]:
         distanceMsBts_mean[aBts] += val
-      distanceMsBts_mean /= 32
+      distanceMsBts_mean[aBts] /= 32
 
     rxlev_ncell_mean = {}
     for aBts in self.__bts_list:
       rxlev_ncell_mean[aBts] = 0
       for val in self.__rxlev_ncell[aBts]:
         rxlev_ncell_mean[aBts] += val
-      rxlev_ncell_mean /= 32
+      rxlev_ncell_mean[aBts] /= 32
 
     
 
