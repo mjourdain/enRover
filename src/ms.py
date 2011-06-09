@@ -11,8 +11,8 @@ speed_light = 3 * 100000000
 
 class MS(Station):
   """Represent a Mobile Station"""
-  def __init__(self, x, y, network, p, pe, ge):
-    Station.__init__(self, x, y)
+  def __init__(self, station_id, x, y, network, p, pe, ge):
+    Station.__init__(self, station_id, x, y)
     self.__bts_list = set()
     self.bts = None
     self.pref_network = network

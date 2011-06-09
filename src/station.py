@@ -5,7 +5,8 @@ import math
 
 class Station:
   """Represent a station"""
-  def __init__(self, x, y):
+  def __init__(self, station_id, x, y):
+    self.id = station_id
     self.pos_x = x
     self.pos_y = y
 

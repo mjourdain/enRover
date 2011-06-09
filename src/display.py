@@ -32,9 +32,8 @@ class Display(QtGui.QMainWindow):
     self.__ms_pen2 = QtGui.QPen()
     self.__ms_pen2.setWidth(1)
     self.__ms_pen2.setColor(QtGui.QColor((0, 0, 0)))
-    paintFont = QtGui.QFont()
-    paintFont.setPointSizeF(7.0)
-    self.__paint.setFont(paintFont);
+    self.__paintFont = QtGui.QFont("Arial", 8)
+    self.__paint.setFont(self.__paintFont);
 
     self.__toolbar = QtGui.QToolBar()
     self.addToolBar(self.__toolbar)
@@ -91,9 +90,10 @@ class Display(QtGui.QMainWindow):
     self.__drawLine(bts.pos_x, bts.pos_y-6, bts.pos_x-3, bts.pos_y-8)
     self.__drawLine(bts.pos_x, bts.pos_y-6, bts.pos_x+3, bts.pos_y-8)
     if bts.network == "GSM":
-      self.__drawText(bts.pos_x+5, bts.pos_y+5, "G")
+      self.__drawText(bts.pos_x-13, bts.pos_y+5, "G")
     else:
-      self.__drawText(bts.pos_x+5, bts.pos_y+5, "U")
+      self.__drawText(bts.pos_x-13, bts.pos_y+5, "U")
+    self.__drawText(bts.pos_x+5, bts.pos_y+5, str(bts.id))
 
     dist = int(bts.nominal_range)
     self.__bts_pen2.setColor(color)
@@ -106,9 +106,10 @@ class Display(QtGui.QMainWindow):
     self.__ms_pen1.setColor(color)
     self.__paint.setPen(self.__ms_pen1)
     self.__drawEllipse(ms.pos_x-2, ms.pos_y-2, 5, 5)
+    self.__paint.setPen(self.__ms_pen2)
+    self.__drawText(ms.pos_x+8, ms.pos_y+9, str(ms.id))
 
     if ms.pref_network != "GSM":
-      self.__paint.setPen(self.__ms_pen2)
       self.__drawEllipse(ms.pos_x-5, ms.pos_y-5, 11, 11)
 
   def __drawLine(self, *args):
@@ -128,6 +129,7 @@ class Display(QtGui.QMainWindow):
     args = list(args)
     args[0] += Display.margin
     args[1] += Display.margin
+    self.__paint.setFont(self.__paintFont);
     self.__paint.drawText(*args)
 
   def update(self):

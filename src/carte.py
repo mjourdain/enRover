@@ -137,9 +137,11 @@ class Carte:
     scale = float(meters)/px
 
     for node in xmldoc.getElementsByTagName("Bts"):
-      self.add(BTS(getInPx(node.getAttribute("location").split(",")[0], px,
-        meters), getInPx(node.getAttribute("location").split(",")[1], px,
-        meters), node.getAttribute("network"),
+      self.add(BTS(
+        int(node.getAttribute("id")),
+        getInPx(node.getAttribute("location").split(",")[0], px, meters),
+        getInPx(node.getAttribute("location").split(",")[1], px, meters),
+        node.getAttribute("network"),
         int(node.getAttribute("ho_margin")),
         int(node.getAttribute("ms_txpwr_max")),
         int(node.getAttribute("bts_txpwr_max")),
@@ -159,8 +161,12 @@ class Carte:
       else: #TODO dynamic size, depending on xml values
         msX = random.randint(0, 799)
         msY = random.randint(0,599)
-      self.add(MS(msX, msY, node.getAttribute("network"),
-          int(node.getAttribute("p")), int(node.getAttribute("pe")),
+      self.add(MS(
+          int(node.getAttribute("id")),
+          msX, msY,
+          node.getAttribute("network"),
+          int(node.getAttribute("p")),
+          int(node.getAttribute("pe")),
           int(node.getAttribute("ge"))))
 
   def resize(self, width, height):

@@ -10,9 +10,10 @@ speed_light = 300000000
 
 class BTS(Station):
   """Represent a Base Transmiter Station"""
-  def __init__(self, x, y, network, ho_margin, ms_txpwr_max, bts_txpwr_max,
-  rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h, l_rxlev_up_h, pe, ge, f, scale):
-    Station.__init__(self, x, y)
+  def __init__(self, station_id, x, y, network, ho_margin, ms_txpwr_max,
+  bts_txpwr_max, rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h,
+  l_rxlev_up_h, pe, ge, f, scale):
+    Station.__init__(self, station_id, x, y)
     self.ms_list = set()
     self.network = network
     self.ho_margin = ho_margin
