@@ -24,9 +24,12 @@ class Carte:
     self.__display.action_load.triggered.connect(self.load_file)
     self.__display.action_reload.triggered.connect(self.reload_file)
     self.__display.action_play.triggered.connect(self.__update_moving_ms)
-    self.__display.action_incSpeed.triggered.connect(lambda: self.change_speed(1))
-    self.__display.action_decSpeed.triggered.connect(lambda: self.change_speed(-1))
-    self.__display.speed_lineedit.editingFinished.connect(lambda: self.set_speed(float(self.__display.speed_lineedit.text())))
+    self.__display.action_incSpeed.triggered.connect(
+                                                lambda: self.change_speed(1))
+    self.__display.action_decSpeed.triggered.connect(
+                                                lambda: self.change_speed(-1))
+    self.__display.speed_lineedit.editingFinished.connect(
+          lambda: self.set_speed(float(self.__display.speed_lineedit.text())))
 
     self.__move_timer = QtCore.QTimer()
     self.__move_timer.timeout.connect(self.movems)
@@ -105,7 +108,7 @@ class Carte:
     if not filename:
       file_filter = "XML files(*.xml);;All files(*)"
       fname = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
-      
+
 
       if not fname:
         return
