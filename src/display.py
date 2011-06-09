@@ -55,6 +55,20 @@ class Display(QtGui.QMainWindow):
     self.action_play.setShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Space))
     self.action_play.setCheckable(True)
 
+    decSpeedIcon = style.standardIcon(QtGui.QStyle.SP_MediaSeekBackward)
+    self.action_decSpeed = self.__toolbar.addAction(decSpeedIcon, "Decelerate")
+
+    self.speed_lineedit = QtGui.QLineEdit("1.0")
+    self.speed_lineedit.setMaxLength(3)
+    self.speed_lineedit.setSizePolicy(QtGui.QSizePolicy.Preferred,
+                                                  QtGui.QSizePolicy.Ignored)
+    self.speed_lineedit.setMaximumWidth(40)
+    self.speed_lineedit.setAlignment(QtCore.Qt.AlignHCenter)
+    self.__toolbar.addWidget(self.speed_lineedit)
+
+    incSpeedIcon = style.standardIcon(QtGui.QStyle.SP_MediaSeekForward)
+    self.action_incSpeed = self.__toolbar.addAction(incSpeedIcon, "Accelerate")
+
     self.clean()
     self.update()
 

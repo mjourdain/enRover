@@ -26,8 +26,12 @@ class MS(Station):
 
     self.__handover_timer = QtCore.QTimer()
     self.__handover_timer.timeout.connect(self.measure)
-    self.__handover_timer.setInterval(480)
+    self.set_speed(1)
     self.__handover_timer.start()
+
+  def set_speed(self, speed):
+    """Set map speed"""
+    self.__handover_timer.setInterval(480/pow(2, speed-1))
 
   def update_bts_list(self, bts_list):
     """Update known Base Transmiter Station list"""
@@ -110,7 +114,7 @@ math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10)
     cOverI = self.pe / (10 * math.log10(I))
-    
+
     rxqual_dl = getRxQualFromCOverI(cOverI)
 
     self.__bts_mutex.unlock()
@@ -125,7 +129,7 @@ math.pi), 2) / (self.bts.pe * distanceMsBtsPow2)
     #rxqual_up = getRxQualFromCOverI(cOverI)
 
     self.__bts_mutex.unlock()
-  
+
 def getRxQualFromCOverI(cOverI):
   if (cOverI < 1):
     return 7;

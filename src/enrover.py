@@ -13,8 +13,11 @@ args = QtCore.QCoreApplication.arguments()
 
 carte = Carte(800, 600)
 
-if (len(args) == 2):
+if (len(args) >= 2):
   carte.load_file(args[1])
+
+if (len(args) >= 3):
+  carte.set_speed(args[2])
 
 carte.start_moving_ms()
 
