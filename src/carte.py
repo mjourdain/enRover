@@ -105,9 +105,11 @@ class Carte:
     if not filename:
       file_filter = "XML files(*.xml);;All files(*)"
       fname = QtGui.QFileDialog.getOpenFileName(filter=file_filter)
+      
 
-      if not filename:
+      if not fname:
         return
+      filename = fname
 
     self.__filename = str(filename)
     self.__load_file()

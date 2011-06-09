@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-speed_light = 3 * 100000000
 
+import math
 from station import Station
 import math
 
-speed_light = 300000000
+speed_light = 300000000.
 
 class BTS(Station):
   """Represent a Base Transmiter Station"""
