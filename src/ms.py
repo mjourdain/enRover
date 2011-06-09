@@ -8,7 +8,7 @@ import operator
 import math
 
 speed_light = 3 * 100000000
-nbsamples = 0
+
 
 class MS(Station):
 
@@ -21,6 +21,19 @@ class MS(Station):
     self.p = p
     self.pe = pe
     self.ge = ge
+
+    self.__nbsamples = 0
+    self.__distanceMsBts = {}
+    self.__rxlev_ncell = {}
+    for aBts in self.__bts_list
+      self.__distanceMsBts[aBts] = []
+      self.__rxlev_ncell[aBts] = []
+
+    self.__rxlev_dl = []
+    self.__rxlev_up = []
+    self.__rxqual_dl = []
+    self.__rxqual_up = []
+
 
     self.__bts_mutex = QtCore.QMutex()
 
@@ -95,30 +108,28 @@ class MS(Station):
       self.__last_move = (self.__last_move + 4) % 8
 
   def measure(self):
-    self.__bts_mutex.lock()
 
-    nbsamples + 1
+    self.__bts_mutex.lock()
 
     if self.bts is None:
       return
 
     #Distances
-    distanceMsBts = {}
     for aBts in self.__bts_list:
-      distanceMsBts[aBts] = self.distance_from(aBts)
+      self.__distanceMsBts[aBts].append(self.distance_from(aBts))
 
-    #rx_lev
-    rxlev_dl = self.ge + self.bts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts]))
-    rxlev_up = self.ge + self.bts.ge - self.bts.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts]))
+    #rxlev
+    self.__rxlev_dl.append(self.ge + self.bts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts])))
+    self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 * math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 * math.log10(4 * math.pi * distanceMsBts[self.bts])))
 
-    #rx_qual
+    #rxqual
     I = 0
     for aBts in self.__bts_list:
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10.)
     cOverI = self.pe / (10 * math.log10(I))
     
-    rxqual_dl = getRxQualFromCOverI(cOverI)
+    self.__rxqual_dl.append(getRxQualFromCOverI(cOverI))
 
     I = 0
     for aMs in self.bts.ms_list:
@@ -126,21 +137,60 @@ class MS(Station):
         I += pow(10, aMs.pe)
     cOverI = self.pe / (10 * math.log10(I))
 
-    rxqual_up = getRxQualFromCOverI(cOverI)
+    self.__rxqual_up.append(getRxQualFromCOverI(cOverI))
 
-    #rx_lev on other cells
-    rxlev_ncell = {}
+    #rxlev on other cells
     for aBts in self.__bts_list:
-      rxlev_ncell[aBts] = self.ge + aBts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(aBts.f * 1000000)) - (20 * math.log10(4 * math.pi * self.distance_from(aBts)))
+      self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(aBts.f * 1000000)) - (20 * math.log10(4 * math.pi * self.distance_from(aBts))))
 
-    
-    if (nbsamples % 32 == 0):
+    self.__nbsamples += 1
+
+    if (self.__nbsamples % 32 == 0):
+      self.__nbsamples = 0
       self.meanValues()
+      
+
 
     self.__bts_mutex.unlock()
 
   def meanValues(self):
-    return
+    rxlev_dl_mean = 0
+    for val in self.__rxlev_dl
+      rxlev_dl_mean += val
+    rxlev_dl_mean /= 32
+
+    rxlev_up_mean = 0
+    for val in self.__rxlev_up
+      rxlev_dl_mean += val
+    rxlev_up_mean /= 32
+
+    rxqual_dl_mean = 0
+    for val in self.__rxqual_dl
+      rxqual_dl_mean += val
+    rxqual_dl_mean /= 32
+
+    rxqual_up_mean = 0
+    for val in self.__rxqual_up
+      rxqual_up_mean += val
+    rxqual_up_mean /= 32
+
+    distanceMsBts_mean = {}
+    for aBts in self.__bts_list
+      distanceMsBts_mean[aBts] = 0
+      for val in self.__distanceBtsMs[aBts]
+        distanceMsBts_mean[aBts] += val
+      distanceMsBts_mean /= 32
+
+    rxlev_ncell_mean = {}
+    for aBts in self.__bts_list
+      rxlev_ncell_mean[aBts] = 0
+      for val in self.__rxlev_ncell[aBts]
+        rxlev_ncell_mean[aBts] += val
+      rxlev_ncell_mean /= 32
+
+    
+
+
   
 def getRxQualFromCOverI(cOverI):
   if (cOverI < 1):
