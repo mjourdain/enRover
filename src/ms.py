@@ -147,7 +147,7 @@ math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
 math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
     self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 *
 math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
-math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
+math.log10(4 * math.pi * max(1, self.__distanceMsBts[self.bts][self.__nbsamples]))))
 
     #rxqual
     I = 0
@@ -170,7 +170,7 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
     for aBts in self.__bts_list:
       toto = (20 * math.log10(speed_light))
       tata = (20 * math.log10(aBts.f * 1000000))
-      tutu = (20 * math.log10(4 * math.pi * self.distance_from(aBts)))
+      tutu = (20 * math.log10(4 * math.pi * max(1, self.distance_from(aBts))))
 
       self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + toto - tata
 - tutu)
