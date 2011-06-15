@@ -168,7 +168,12 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
 
     #rxlev on other cells
     for aBts in self.__bts_list:
-      self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + (20 * math.log10(speed_light)) - (20 * math.log10(aBts.f * 1000000)) - (20 * math.log10(4 * math.pi * self.distance_from(aBts))))
+      toto = (20 * math.log10(speed_light))
+      tata = (20 * math.log10(aBts.f * 1000000))
+      tutu = (20 * math.log10(4 * math.pi * self.distance_from(aBts)))
+
+      self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + toto - tata
+- tutu)
 
 
     self.__bts_mutex.unlock()
