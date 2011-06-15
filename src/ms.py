@@ -123,6 +123,13 @@ class MS(Station):
 
     if (self.__nbsamples ==  32):
       self.__nbsamples = 0
+      print self.__distanceMsBts
+      print self.__rxlev_dl
+      print self.__rxlev_up
+      print self.__rxqual_dl
+      print self.__rxqual_up
+      print  self.__rxlev_ncell
+
       self.meanValues()
     if (self.__nbsamples == 0):
       for aBts in self.__bts_list:
@@ -148,7 +155,7 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10.)
     cOverI = self.pe / (10 * math.log10(I))
-    
+
     self.__rxqual_dl.append(getRxQualFromCOverI(cOverI))
 
     I = 0
@@ -224,12 +231,12 @@ self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
           print ("MS" + self.id + " handover from BTS" + self.bts.id + " to BTS"
 + self.btsTuple[0].id)
           self.bts = btsTuple[0]
-          
-          
 
 
 
-  
+
+
+
 def getRxQualFromCOverI(cOverI):
   if (cOverI < 1):
     return 7;
