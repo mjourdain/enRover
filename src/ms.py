@@ -21,6 +21,7 @@ class MS(Station):
     self.p = p
     self.pe = pe
     self.ge = ge
+    self.dtx = random.choice((True, False))
 
     self.__rxlev_dl = []
     self.__rxlev_up = []
@@ -73,6 +74,11 @@ class MS(Station):
 
   def random_move(self, max_x, max_y):
     """Move Mobile Station randomly"""
+
+    # Dtx ?
+    if random.randint(0, 99) is 0:
+      self.dtx = not self.dtx
+
     dir_change = random.randint(0, 300)
 
     # Change direction ?
@@ -123,12 +129,12 @@ class MS(Station):
 
     if (self.__nbsamples ==  32):
       self.__nbsamples = 0
-      print self.__distanceMsBts
-      print self.__rxlev_dl
-      print self.__rxlev_up
-      print self.__rxqual_dl
-      print self.__rxqual_up
-      print  self.__rxlev_ncell
+      #print self.__distanceMsBts
+      #print self.__rxlev_dl
+      #print self.__rxlev_up
+      #print self.__rxqual_dl
+      #print self.__rxqual_up
+      #print  self.__rxlev_ncell
 
       self.meanValues()
     if (self.__nbsamples == 0):
