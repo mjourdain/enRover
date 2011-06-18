@@ -21,6 +21,7 @@ class MS(Station):
     self.p = p
     self.pe = pe
     self.ge = ge
+    self.dtx = random.choice((True, False))
 
     self.__rxlev_dl = []
     self.__rxlev_up = []
@@ -87,6 +88,11 @@ class MS(Station):
 
   def random_move(self, max_x, max_y):
     """Move Mobile Station randomly"""
+
+    # Dtx ?
+    if random.randint(0, 99) is 0:
+      self.dtx = not self.dtx
+
     dir_change = random.randint(0, 300)
 
     # Change direction ?
@@ -137,6 +143,13 @@ class MS(Station):
 
     if (self.__nbsamples ==  12):
       self.__nbsamples = 0
+      #print self.__distanceMsBts
+      #print self.__rxlev_dl
+      #print self.__rxlev_up
+      #print self.__rxqual_dl
+      #print self.__rxqual_up
+      #print  self.__rxlev_ncell
+
       self.meanValues()
     if (self.__nbsamples == 0):
       for aBts in self.__bts_list:
@@ -151,10 +164,10 @@ class MS(Station):
     #rxlev
     self.__rxlev_dl.append(self.ge + self.bts.ge - self.pe + (20 *
 math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
-math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
+math.log10(4 * math.pi * max(1, self.__distanceMsBts[self.bts][self.__nbsamples]))))
     self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 *
 math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
-math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
+math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamples]))))
 
     #rxqual
     I = 0
@@ -162,7 +175,7 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
       if (aBts.f == self.bts.f):
         I += pow(10, aBts.pe/10.)
     cOverI = self.pe / (10 * math.log10(I))
-    
+
     self.__rxqual_dl.append(getRxQualFromCOverI(cOverI))
 
     I = 0
@@ -179,7 +192,7 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
     for aBts in self.__bts_list:
       toto = (20 * math.log10(speed_light))
       tata = (20 * math.log10(aBts.f * 1000000))
-      tutu = (20 * math.log10(4 * math.pi * self.distance_from(aBts)))
+      tutu = (20 * math.log10(4 * math.pi * 3 * max(1, self.distance_from(aBts))))
 
       self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + toto - tata
 - tutu)
@@ -324,7 +337,9 @@ self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
 
 
 
-  
+
+
+
 def getRxQualFromCOverI(cOverI):
   if (cOverI < 1):
     return 7;
