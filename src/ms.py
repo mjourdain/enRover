@@ -27,7 +27,21 @@ class MS(Station):
     self.__rxqual_up = []
     self.__rxqual_dl = []
 
+    self.__nb_means_rxlev_up = 0
+    self.__nb_means_rxlev_dl = 0
+    self.__nb_means_rxqual_up = 0
+    self.__nb_means_rxqual_dl = 0
+    self.__nb_means_distance = 0
+
+    self.__rxlev_up_mean = []
+    self.__rxlev_dl_mean = []
+    self.__rxqual_up_mean = []
+    self.__rxqual_dl_mean = []
+    self.__distanceMsBts_mean = {}
+    self.__rxlev_ncell_mean = {}
+
     self.__nbsamples = -1
+    self.__nb_means = -1
     self.__distanceMsBts = {}
     self.__rxlev_ncell = {}
     for aBts in self.__bts_list:
@@ -121,7 +135,7 @@ class MS(Station):
 
     self.__nbsamples += 1
 
-    if (self.__nbsamples ==  32):
+    if (self.__nbsamples ==  12):
       self.__nbsamples = 0
       self.meanValues()
     if (self.__nbsamples == 0):
@@ -155,9 +169,11 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
     for aMs in self.bts.ms_list:
       if (aMs.bts.f == self.bts.f):
         I += pow(10, aMs.pe)
-    cOverI = self.pe / (10 * math.log10(I))
-
-    self.__rxqual_up.append(getRxQualFromCOverI(cOverI))
+    if(I != 0):
+      cOverI = self.pe / (10 * math.log10(I))
+      self.__rxqual_up.append(getRxQualFromCOverI(cOverI))
+    else:
+      self.__rxqual_up.append(0)
 
     #rxlev on other cells
     for aBts in self.__bts_list:
@@ -172,63 +188,137 @@ math.log10(4 * math.pi * self.__distanceMsBts[self.bts][self.__nbsamples])))
     self.__bts_mutex.unlock()
 
   def meanValues(self):
-    rxlev_dl_mean = 0
+    nb_values_rxlev_up = 12
+    nb_values_rxlev_dl = 12
+    nb_values_rxqual_up = 7
+    nb_values_rxqual_dl = 7
+    nb_values_distance = 10
+
+    self.__nb_means_rxlev_up += 1
+    self.__nb_means_rxlev_dl += 1
+    self.__nb_means_rxqual_up += 1
+    self.__nb_means_rxqual_dl += 1
+    self.__nb_means_distance += 1
+
+    if (self.__nb_means_rxlev_up == 0):
+      self.__rxlev_up_mean = []
+    if (self.__nb_means_rxlev_dl == 0):
+      self.__rxlev_dl_mean = []
+    if (self.__nb_means_rxqual_up == 0):
+      self.__rxqual_up_mean = []
+    if (self.__nb_means_rxqual_dl == 0):
+      self.__rxqual_dl_mean = [] 
+    if (self.__nb_means_distance == 0):
+      self.__distanceMsBts_mean = {}
+      for aBts in self.__bts_list:
+        self.__distanceMsBts_mean[aBts] = []
+      
+
+
+    if (self.__nb_means_rxlev_up > nb_values_rxlev_up -1):
+      self.__nb_means_rxlev_up = 0
+      self.__rxlev_up_mean = []
+    if (self.__nb_means_rxlev_dl > nb_values_rxlev_dl -1):
+      self.__nb_means_rxlev_dl = 0
+      self.__rxlev_dl_mean = []
+    if (self.__nb_means_rxqual_up > nb_values_rxqual_dl -1):
+      self.__nb_means_rxlev_up = 0
+      self.__rxqual_up_mean = []
+    if (self.__nb_means_rxqual_dl > nb_values_rxqual_up -1):
+      self.__nb_means_rxqual_dl = 0
+      self.__rxqual_dl_mean = []
+    if (self.__nb_means_distance > nb_values_distance -1):
+      self.__nb_means_distance = 0
+      self.__distanceMsBts_mean = {}
+      for aBts in self.__bts_list:
+        self.__distanceMsBts_mean[aBts] = []
+      
+
+    
     for val in self.__rxlev_dl:
-      rxlev_dl_mean += val
-    rxlev_dl_mean /= 32
+      try:
+        self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] += val
+      except IndexError:
+        self.__rxlev_dl_mean.append(val)
+    self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] /= 12
 
-    rxlev_up_mean = 0
     for val in self.__rxlev_up:
-      rxlev_dl_mean += val
-    rxlev_up_mean /= 32
+      try:
+        self.__rxlev_up_mean[self.__nb_means_rxlev_up] += val
+      except IndexError:
+        self.__rxlev_up_mean.append(val)
+    self.__rxlev_up_mean[self.__nb_means_rxlev_up] /= 12
 
-    rxqual_dl_mean = 0
     for val in self.__rxqual_dl:
-      rxqual_dl_mean += val
-    rxqual_dl_mean /= 32
+      try:
+        self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] += val
+      except IndexError:
+        self.__rxqual_dl_mean.append(val)
+    self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] /= 12
 
-    rxqual_up_mean = 0
     for val in self.__rxqual_up:
-      rxqual_up_mean += val
-    rxqual_up_mean /= 32
+      try:
+        self.__rxqual_up_mean[self.__nb_means_rxqual_up] += val
+      except IndexError:
+        self.__rxqual_up_mean.append(val)
+    self.__rxqual_up_mean[self.__nb_means_rxqual_up] /= 12
 
-    distanceMsBts_mean = {}
     for aBts in self.__bts_list:
-      distanceMsBts_mean[aBts] = 0
       for val in self.__distanceMsBts[aBts]:
-        distanceMsBts_mean[aBts] += val
-      distanceMsBts_mean[aBts] /= 32
+        try:
+          self.__distanceMsBts_mean[aBts][self.__nb_means_distance] += val
+        except IndexError:
+          self.__distanceMsBts_mean[aBts].append(val)
+        except KeyError:
+          self.__distanceMsBts_mean[aBts] = [val]
+      self.__distanceMsBts_mean[aBts][self.__nb_means_distance] /= 12
 
-    rxlev_ncell_mean = {}
+
     for aBts in self.__bts_list:
-      rxlev_ncell_mean[aBts] = 0
+      self.__rxlev_ncell_mean[aBts] = 0
       for val in self.__rxlev_ncell[aBts]:
-        rxlev_ncell_mean[aBts] += val
-      rxlev_ncell_mean[aBts] /= 32
+        self.__rxlev_ncell_mean[aBts] += val
+      self.__rxlev_ncell_mean[aBts] /= 12
 
     pwr_c_d = self.bts.bts_txpwr_max - self.bts.pe
     pgbt = {}
     for aBts in self.__bts_list:
-      pgbt[aBts] = (min(self.bts.ms_txpwr_max, self.p) - rxlev_dl_mean - pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - rxlev_ncell_mean[aBts])
+      pgbt[aBts] = (min(self.bts.ms_txpwr_max, self.p) -
+self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] -
+pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - self.__rxlev_ncell_mean[aBts])
 
     neighbour_list = []
     for aBts in self.__bts_list:
       pa = aBts.ms_txpwr_max - self.p
-      if (rxlev_ncell_mean[aBts] > (aBts.rxlev_min + max(self.p, pa))):
+      if (self.__rxlev_ncell_mean[aBts] > (aBts.rxlev_min + max(self.p, pa))):
         val_neighbour_list = pgbt[aBts] - self.bts.ho_margin
         if (val_neighbour_list > 0):
           neighbour_list.append((aBts, val_neighbour_list))
     neighbour_list.sort(key = operator.itemgetter(1))
+   
+    nb_values_rxlev_up = 12
+    nb_values_rxlev_dl = 12
+    nb_values_rxqual_up = 7
+    nb_values_rxqual_dl = 7
+    nb_values_distance = 10
 
-    for btsTuple in neighbour_list:
-      if (rxlev_up_mean < self.bts.l_rxlev_up_h and rxlev_dl_mean < l_rxlev_dl_h
-and rxqual_up_mean > l_rxqual_h and rxqual_dl_mean > l_rxqual_h and
-distanceMsBts_mean[btsTuple[0]] > self.bts.max_ms_range and pgbt[btsTuple[0]] >
+ 
+    if(len(self.__rxlev_up_mean) == nb_values_rxlev_up and
+len(self.__rxlev_dl_mean) == nb_values_rxlev_dl and len(self.__rxqual_up_mean)
+== nb_values_rxqual_up and len(self.__rxqual_dl_mean) == nb_values_rxqual_dl and
+len(self.__distanceMsBts_mean) == nb_values_distance):
+      print("bleh")
+
+      for btsTuple in neighbour_list:
+        if (self.__rxlev_up_mean[self.__nb_means_rxlev_up] < self.bts.l_rxlev_up_h
+and self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] < self.bts.l_rxlev_dl_h
+and self.__rxqual_up_mean[self.__nb_means_rxqual_up] > self.bts.l_rxqual_h and
+self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] > self.bts.l_rxqual_h and
+self.__distanceMsBts_mean[btsTuple[0]] > self.bts.max_ms_range and pgbt[btsTuple[0]] >
 self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
-        if(btsTuple[0] != self.bts):
-          print ("MS" + self.id + " handover from BTS" + self.bts.id + " to BTS"
-+ self.btsTuple[0].id)
-          self.bts = btsTuple[0]
+          if(btsTuple[0] != self.bts):
+            print ("MS", self.id, " handover from BTS", self.bts.id, " to BTS", btsTuple[0].id)
+            self.bts = btsTuple[0]
           
           
 
