@@ -3,10 +3,15 @@
 
 import sys
 import random
+import os
+import time
 from PyQt4 import QtGui, QtCore
 from carte import Carte
 from ms import MS
 from bts import BTS
+import log
+
+LOG_DIR = "log"
 
 app = QtGui.QApplication(sys.argv)
 args = QtCore.QCoreApplication.arguments()
@@ -18,6 +23,12 @@ if (len(args) >= 2):
 
 if (len(args) >= 3):
   carte.set_speed(int(args[2]))
+
+
+if not os.path.exists(LOG_DIR):
+  os.makedirs(LOG_DIR)
+
+log.LogFile.outFile = file(LOG_DIR + time.strftime("/%F_%T.log"), "w")
 
 carte.start_moving_ms()
 

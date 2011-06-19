@@ -6,6 +6,7 @@ from PyQt4 import QtCore
 import random
 import operator
 import math
+import log
 
 speed_light = 3 * 100000000
 
@@ -201,6 +202,10 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
     self.__bts_mutex.unlock()
 
   def meanValues(self):
+    lg = log.AtomicLog()
+    lg.info("==============================" )
+    lg.info("MS " , self.id , ", measure phase")
+
     nb_values_rxlev_up = 12
     nb_values_rxlev_dl = 12
     nb_values_rxqual_up = 7
@@ -220,12 +225,12 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
     if (self.__nb_means_rxqual_up == 0):
       self.__rxqual_up_mean = []
     if (self.__nb_means_rxqual_dl == 0):
-      self.__rxqual_dl_mean = [] 
+      self.__rxqual_dl_mean = []
     if (self.__nb_means_distance == 0):
       self.__distanceMsBts_mean = {}
       for aBts in self.__bts_list:
         self.__distanceMsBts_mean[aBts] = []
-      
+
 
 
     if (self.__nb_means_rxlev_up > nb_values_rxlev_up -1):
@@ -245,15 +250,16 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       self.__distanceMsBts_mean = {}
       for aBts in self.__bts_list:
         self.__distanceMsBts_mean[aBts] = []
-      
 
-    
+
+
     for val in self.__rxlev_dl:
       try:
         self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] += val
       except IndexError:
         self.__rxlev_dl_mean.append(val)
     self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] /= 12
+    lg.info("rxlev_dl_mean : " , self.__rxlev_dl_mean[self.__nb_means_rxlev_dl])
 
     for val in self.__rxlev_up:
       try:
@@ -261,6 +267,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       except IndexError:
         self.__rxlev_up_mean.append(val)
     self.__rxlev_up_mean[self.__nb_means_rxlev_up] /= 12
+    lg.info("rxlev_up_mean : " , self.__rxlev_up_mean[self.__nb_means_rxlev_up])
 
     for val in self.__rxqual_dl:
       try:
@@ -268,6 +275,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       except IndexError:
         self.__rxqual_dl_mean.append(val)
     self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] /= 12
+    lg.info("rxqual_dl_mean : " , self.__rxqual_dl_mean[self.__nb_means_rxqual_dl])
 
     for val in self.__rxqual_up:
       try:
@@ -275,6 +283,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       except IndexError:
         self.__rxqual_up_mean.append(val)
     self.__rxqual_up_mean[self.__nb_means_rxqual_up] /= 12
+    lg.info("rxqual_up_mean : " , self.__rxqual_up_mean[self.__nb_means_rxqual_up])
 
     for aBts in self.__bts_list:
       for val in self.__distanceMsBts[aBts]:
@@ -285,6 +294,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
         except KeyError:
           self.__distanceMsBts_mean[aBts] = [val]
       self.__distanceMsBts_mean[aBts][self.__nb_means_distance] /= 12
+      lg.info("distanceMsBts_mean[" , aBts.id , "] : " , self.__distanceMsBts_mean[aBts][self.__nb_means_distance])
 
 
     for aBts in self.__bts_list:
@@ -292,6 +302,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       for val in self.__rxlev_ncell[aBts]:
         self.__rxlev_ncell_mean[aBts] += val
       self.__rxlev_ncell_mean[aBts] /= 12
+      lg.info("rxlev_ncell_mean[" , aBts.id , "] : " , self.__rxlev_ncell_mean[aBts])
 
     pwr_c_d = self.bts.bts_txpwr_max - self.bts.pe
     pgbt = {}
@@ -308,14 +319,18 @@ pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - self.__rxlev_ncell_mean[aBts])
         if (val_neighbour_list > 0):
           neighbour_list.append((aBts, val_neighbour_list))
     neighbour_list.sort(key = operator.itemgetter(1))
-   
+
+    lg.info("neighbour_list : [" , ", ".join(
+                  [ str(e[0].id) + ": " + str(e[1]) for e in neighbour_list]),
+                  "]")
+
     nb_values_rxlev_up = 12
     nb_values_rxlev_dl = 12
     nb_values_rxqual_up = 7
     nb_values_rxqual_dl = 7
     nb_values_distance = 10
 
- 
+
     if(len(self.__rxlev_up_mean) == nb_values_rxlev_up and
 len(self.__rxlev_dl_mean) == nb_values_rxlev_dl and len(self.__rxqual_up_mean)
 == nb_values_rxqual_up and len(self.__rxqual_dl_mean) == nb_values_rxqual_dl and
@@ -332,8 +347,10 @@ self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
           if(btsTuple[0] != self.bts):
             print ("MS", self.id, " handover from BTS", self.bts.id, " to BTS", btsTuple[0].id)
             self.bts = btsTuple[0]
-          
-          
+
+    lg.info("==============================" )
+    lg.info("" )
+
 
 
 
