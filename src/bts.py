@@ -13,7 +13,7 @@ class BTS(Station):
   def __init__(self, station_id, x, y, network, ho_margin, ms_txpwr_max,
   bts_txpwr_max, rxlev_min, max_ms_range, l_rxqual_h, l_rxlev_dl_h,
   l_rxlev_up_h, pe, ge, f, scale):
-    Station.__init__(self, station_id, x, y)
+    Station.__init__(self, station_id, x, y, scale)
     self.ms_list = set()
     self.network = network
     self.ho_margin = ho_margin
@@ -33,7 +33,6 @@ class BTS(Station):
     # TODO
     log_range = (-32.44 - 20 * math.log10(f) + ge + 105 + pe)/20 / 3
     self.nominal_range = pow(10, log_range) * 1000 / scale
-    print "range :", self.nominal_range * scale
 
   def link(self, ms):
     """Link a MS"""

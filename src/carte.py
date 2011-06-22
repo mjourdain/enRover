@@ -175,7 +175,8 @@ class Carte:
           node.getAttribute("network"),
           int(node.getAttribute("p")),
           int(node.getAttribute("pe")),
-          int(node.getAttribute("ge"))))
+          int(node.getAttribute("ge")),
+          scale))
 
   def resize(self, width, height):
     """Resize map"""

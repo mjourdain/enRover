@@ -28,7 +28,7 @@ if (len(args) >= 3):
 if not os.path.exists(LOG_DIR):
   os.makedirs(LOG_DIR)
 
-#log.LogFile.outFile = file(LOG_DIR + time.strftime("/%F_%T.log"), "w")
+log.LogFile.outFile = file(LOG_DIR + time.strftime("/%F_%T.log"), "w")
 
 carte.start_moving_ms()
 
