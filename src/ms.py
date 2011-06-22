@@ -349,15 +349,13 @@ self.bts.l_rxqual_h]))
             if self.__bts_candidate == btsTuple[0]:
               self.__nb_request += 1
               if self.__nb_request >= 3:
-                lg.info("MS", self.id, " handover from BTS", self.bts.id, " to
-BTS", btsTuple[0].id)
+                lg.info("MS", self.id, " handover from BTS", self.bts.id, "to BTS", btsTuple[0].id)
                 self.bts = btsTuple[0]
               else:
                 lg.info("MS", self.id, "asked for BTS", btsTuple[0].id,
 self.__nbrequest, "times")
             else:
-              lg.info("MS", self.id, "found new BTS", btsTuple[0].id, "for
-possible handover")
+              lg.info("MS", self.id, "found new BTS", btsTuple[0].id, "for possible handover")
               self.__bts_candidate = btsTuple[0]
               nb_request = 1
 
