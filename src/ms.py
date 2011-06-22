@@ -59,7 +59,11 @@ class MS(Station):
     self.__handover_timer = QtCore.QTimer()
     self.__handover_timer.timeout.connect(self.measure)
     self.set_speed(1)
-    self.__handover_timer.start()
+
+    self.__start_timer = QtCore.QTimer()
+    self.__start_timer.timeout.connect(self.__handover_timer.start)
+    self.__start_timer.setSingleShot(random.randint(0, 480))
+    self.__start_timer.start()
 
   def set_speed(self, speed):
     """Set map speed"""
@@ -135,7 +139,6 @@ class MS(Station):
       self.__last_move = (self.__last_move + 4) % 8
 
   def measure(self):
-
     self.__bts_mutex.lock()
 
     if self.bts is None:
