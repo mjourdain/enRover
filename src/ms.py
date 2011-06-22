@@ -364,7 +364,7 @@ self.__nb_request, "times")
             else:
               lg.info("MS", self.id, "found new BTS", btsTuple[0].id, "for possible handover")
               self.__bts_candidate = btsTuple[0]
-              nb_request = 1
+              self.__nb_request = 1
 
     lg.info("==============================" )
     lg.info("" )

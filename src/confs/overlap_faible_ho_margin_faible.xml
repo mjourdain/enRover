@@ -1,0 +1,201 @@
+<configuration>
+  <Map size="800,600"/><!--in pixels-->
+  <Scale px="1"
+         meters="60"/>
+  <!--
+  <Mobile id=""
+          location="10m,10km" || "10km,10m" || "10m,10m" || "10km,10km"
+          network : prefered network ="GSM" || "UMTS"
+          p : maximum emission power of the ms [dBm]
+          pe : emission power [dBm]
+          ge : emission gain [dB]
+  />
+  -->
+
+  <Mobile id="1"
+          location="10m,10m"
+          network="GSM"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="2"
+          location="1km,3km"
+          network="GSM"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="3"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="4"
+          location="2km,6km"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="5"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="6"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="7"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="8"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="9"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+  <Mobile id="10"
+          network="UMTS"
+          pe="33"
+          ge="0"
+          p="36"/>
+
+<!--
+  <Bts id=""
+       location="10m,10km" || "10km,10m" || "10m,10m" || "10km,10km"
+       network="GSM" || "UMTS"
+       ho_margin: minimum between two signals to allow handover [dBm]
+       ms_txpwr_max: maximum emission power allowed to be used by the MS in a
+cell [dBm]
+       bts_txpwr_max: maximum emission power allowed to be used by the BTS in a
+cell [dBm]
+      rxlev_min: electromagnetic field level to access to a cell [dBm]
+      max_ms_range: maximum distance between MS and BTS [m]
+      l_rxqual_h: minimum quality to allow handover
+      l_rxlev_dl_h: minimum received level to allow handover on downlink [dBm]
+      l_rxlev_up_h: minimum received level to allow handover on uplink [dBm]
+      pe : emission power [dBm]
+      ge : emission gain [dB]
+      f : emission frequency [MHz]
+  />
+  -->
+
+  <Bts id="1"
+       location="5km,5km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="935"/>
+  <Bts id="2"
+       location="26km,5m"
+       network="UMTS"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="940"/>
+  <Bts id="3"
+       location="20km,17000m"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="950"/>
+   <Bts id="4"
+       location="46km,1km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="935"/>
+<Bts id="5"
+       location="40km,18km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="945"/>
+<Bts id="6"
+       location="2km,25km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="950"/>
+<Bts id="7"
+       location="17km,36km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="940"/>
+<Bts id="8"
+       location="35km,36km"
+       network="GSM"
+       ho_margin="1"
+       ms_txpwr_max="-60"
+       bts_txpwr_max="-40"
+       rxlev_min="-110"
+       max_ms_range="1500"
+       l_rxqual_h="3"
+       l_rxlev_dl_h="-40"
+       l_rxlev_up_h="-40"
+       pe="38"
+       ge="12"
+       f="930"/>
+</configuration>
