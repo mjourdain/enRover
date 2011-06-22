@@ -22,7 +22,8 @@ class MS(Station):
     self.p = p
     self.pe = pe
     self.ge = ge
-    self.dtx = random.choice((True, False))
+    #self.dtx = random.choice((True, False))
+    self.dtx = True
 
     self.__rxlev_dl = []
     self.__rxlev_up = []
@@ -62,7 +63,8 @@ class MS(Station):
 
   def set_speed(self, speed):
     """Set map speed"""
-    self.__handover_timer.setInterval(480/pow(2, speed-1))
+    #self.__handover_timer.setInterval(480/pow(2, speed-1))
+    self.__handover_timer.setInterval(480/12)
 
   def update_bts_list(self, bts_list):
     """Update known Base Transmiter Station list"""
@@ -91,8 +93,8 @@ class MS(Station):
     """Move Mobile Station randomly"""
 
     # Dtx ?
-    if random.randint(0, 99) is 0:
-      self.dtx = not self.dtx
+    #if random.randint(0, 99) is 0:
+    #  self.dtx = not self.dtx
 
     dir_change = random.randint(0, 300)
 
