@@ -112,9 +112,9 @@ class Display(QtGui.QMainWindow):
     if ms.pref_network != "GSM":
       self.__drawEllipse(ms.pos_x-5, ms.pos_y-5, 11, 11)
 
-    if ms.dtx:
-      self.__drawLine(ms.pos_x-3, ms.pos_y-3, ms.pos_x+4, ms.pos_y+4)
-      self.__drawLine(ms.pos_x-3, ms.pos_y+4, ms.pos_x+4, ms.pos_y-3)
+    #if ms.dtx:
+    #  self.__drawLine(ms.pos_x-3, ms.pos_y-3, ms.pos_x+4, ms.pos_y+4)
+    #  self.__drawLine(ms.pos_x-3, ms.pos_y+4, ms.pos_x+4, ms.pos_y-3)
 
   def __drawLine(self, *args):
     """Draw a line in painter"""
