@@ -6,6 +6,7 @@ import xml.dom.minidom
 from PyQt4 import QtCore, QtGui
 from ms import MS
 from bts import BTS
+import log
 from display import Display
 from xml.dom.minidom import Node
 
@@ -21,6 +22,7 @@ class Carte:
     self.__filename = None
     self.__speed = 1.
     self.__freqs_color = {}
+    log.nb_handover = 0
 
     self.__display.action_load.triggered.connect(self.load_file)
     self.__display.action_reload.triggered.connect(self.reload_file)
@@ -128,6 +130,8 @@ class Carte:
     """Load current xml file"""
     if not self.__filename:
       return
+
+    log.nb_handover = 0
 
     # reset map
     self.__bts = {}

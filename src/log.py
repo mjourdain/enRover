@@ -7,6 +7,8 @@ from PyQt4 import QtCore
 INFO = 1
 DEBUG = 2
 
+nb_handover = 0
+
 class LogFile:
   __levels = (DEBUG, INFO)
   __mutex = QtCore.QMutex()

@@ -49,7 +49,7 @@ class MS(Station):
     for aBts in self.__bts_list:
       self.__distanceMsBts[aBts] = []
       self.__rxlev_ncell[aBts] = []
-      
+
     self.__bts_candidate = None
     self.__nb_request = 0
 
@@ -69,7 +69,8 @@ class MS(Station):
 
   def set_speed(self, speed):
     """Set map speed"""
-    self.__handover_timer.setInterval(480/pow(2, speed-1))
+    #self.__handover_timer.setInterval(480/pow(2, speed-1))
+    self.__handover_timer.setInterval(480/12)
 
   def update_bts_list(self, bts_list):
     """Update known Base Transmiter Station list"""
@@ -164,7 +165,7 @@ class MS(Station):
         self.__distanceMsBts[aBts].append(self.distance_from(aBts))
       except KeyError:
         self.__distanceMsBts[aBts] = [self.distance_from(aBts)]
-      
+
       if len(self.__distanceMsBts[aBts]) > 12:
         self.__distanceMsBts[aBts].pop(0)
 
@@ -261,7 +262,7 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][-1]))))
     if len(self.__rxqual_dl_mean) > nb_values_rxqual_dl:
       self.__rxqual_dl_mean.pop(0);
     lg.info("rxqual_dl_mean : " , self.__rxqual_dl_mean[-1])
-    
+
     sumValues = 0
     for val in self.__rxqual_up:
       sumValues += val
@@ -348,16 +349,18 @@ self.bts.l_rxqual_h]))
                   if b > self.bts.max_ms_range]) >= 8
           and pgbt[btsTuple[0]] > self.bts.ho_margin
           and pgbt[btsTuple[0]] > 0):
-  
+
           if(btsTuple[0] != self.bts):
             if self.__bts_candidate == btsTuple[0]:
               self.__nb_request += 1
               if self.__nb_request >= 3:
                 lg.info("MS", self.id, " handover from BTS", self.bts.id, "to BTS", btsTuple[0].id)
                 self.bts = btsTuple[0]
+                log.nb_handover += 1
+                print "Number of handover : ", log.nb_handover
               else:
                 lg.info("MS", self.id, "asked for BTS", btsTuple[0].id,
-self.__nbrequest, "times")
+self.__nb_request, "times")
             else:
               lg.info("MS", self.id, "found new BTS", btsTuple[0].id, "for possible handover")
               self.__bts_candidate = btsTuple[0]
