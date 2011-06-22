@@ -14,16 +14,15 @@ speed_light = 3 * 100000000
 class MS(Station):
 
   """Represent a Mobile Station"""
-  def __init__(self, station_id, x, y, network, p, pe, ge):
-    Station.__init__(self, station_id, x, y)
+  def __init__(self, station_id, x, y, network, p, pe, ge, scale):
+    Station.__init__(self, station_id, x, y, scale)
     self.__bts_list = set()
     self.bts = None
     self.pref_network = network
     self.p = p
     self.pe = pe
     self.ge = ge
-    #self.dtx = random.choice((True, False))
-    self.dtx = True
+    self.dtx = random.choice((True, False))
 
     self.__rxlev_dl = []
     self.__rxlev_up = []
@@ -50,6 +49,9 @@ class MS(Station):
     for aBts in self.__bts_list:
       self.__distanceMsBts[aBts] = []
       self.__rxlev_ncell[aBts] = []
+      
+    self.__bts_candidate = None
+    self.__nb_request = 0
 
 
     self.__bts_mutex = QtCore.QMutex()
@@ -67,8 +69,7 @@ class MS(Station):
 
   def set_speed(self, speed):
     """Set map speed"""
-    #self.__handover_timer.setInterval(480/pow(2, speed-1))
-    self.__handover_timer.setInterval(480/12)
+    self.__handover_timer.setInterval(480/pow(2, speed-1))
 
   def update_bts_list(self, bts_list):
     """Update known Base Transmiter Station list"""
@@ -97,8 +98,8 @@ class MS(Station):
     """Move Mobile Station randomly"""
 
     # Dtx ?
-    #if random.randint(0, 99) is 0:
-    #  self.dtx = not self.dtx
+    if random.randint(0, 99) is 0:
+      self.dtx = not self.dtx
 
     dir_change = random.randint(0, 300)
 
@@ -145,10 +146,8 @@ class MS(Station):
       self.__bts_mutex.unlock()
       return
 
-    self.__nbsamples += 1
-
-    if (self.__nbsamples ==  12):
-      self.__nbsamples = 0
+    self.__nbsamples = (self.__nbsamples + 1)%12
+    if len(self.__rxlev_dl) == 12 and self.__nbsamples == 0:
       #print self.__distanceMsBts
       #print self.__rxlev_dl
       #print self.__rxlev_up
@@ -157,23 +156,30 @@ class MS(Station):
       #print  self.__rxlev_ncell
 
       self.meanValues()
-    if (self.__nbsamples == 0):
-      for aBts in self.__bts_list:
-        self.__distanceMsBts[aBts] = []
-        self.__rxlev_ncell[aBts] = []
 
 
     #Distances
     for aBts in self.__bts_list:
-      self.__distanceMsBts[aBts].append(self.distance_from(aBts))
+      try:
+        self.__distanceMsBts[aBts].append(self.distance_from(aBts))
+      except KeyError:
+        self.__distanceMsBts[aBts] = [self.distance_from(aBts)]
+      
+      if len(self.__distanceMsBts[aBts]) > 12:
+        self.__distanceMsBts[aBts].pop(0)
 
     #rxlev
-    self.__rxlev_dl.append(self.ge + self.bts.ge - self.pe + (20 *
+    self.__rxlev_dl.append(self.ge + self.bts.ge + self.pe + (20 *
 math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
-math.log10(4 * math.pi * max(1, self.__distanceMsBts[self.bts][self.__nbsamples]))))
-    self.__rxlev_up.append(self.ge + self.bts.ge - self.bts.pe + (20 *
+math.log10(4 * math.pi * max(1, self.__distanceMsBts[self.bts][-1]))))
+    if len(self.__rxlev_dl) > 12:
+      self.__rxlev_dl.pop(0)
+
+    self.__rxlev_up.append(self.ge + self.bts.ge + self.bts.pe + (20 *
 math.log10(speed_light)) - (20 * math.log10(self.bts.f * 1000000)) - (20 *
-math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamples]))))
+math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][-1]))))
+    if len(self.__rxlev_up) > 12:
+      self.__rxlev_up.pop(0)
 
     #rxqual
     I = 0
@@ -183,6 +189,8 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
     cOverI = self.pe / (10 * math.log10(I))
 
     self.__rxqual_dl.append(getRxQualFromCOverI(cOverI))
+    if len(self.__rxqual_dl) > 12:
+      self.__rxqual_dl.pop(0)
 
     I = 0
     for aMs in self.bts.ms_list:
@@ -193,23 +201,33 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
       self.__rxqual_up.append(getRxQualFromCOverI(cOverI))
     else:
       self.__rxqual_up.append(0)
+    if len(self.__rxqual_up) > 12:
+      self.__rxqual_up.pop(0)
 
     #rxlev on other cells
     for aBts in self.__bts_list:
       toto = (20 * math.log10(speed_light))
       tata = (20 * math.log10(aBts.f * 1000000))
-      tutu = (20 * math.log10(4 * math.pi * 3 * max(1, self.distance_from(aBts))))
+      tutu = (20 * math.log10(4 * math.pi * max(1, self.distance_from(aBts))))
 
-      self.__rxlev_ncell[aBts].append(self.ge + aBts.ge - self.pe + toto - tata
+      try:
+        self.__rxlev_ncell[aBts].append(self.ge + aBts.ge + self.pe + toto - tata
 - tutu)
+      except KeyError:
+        self.__rxlev_ncell[aBts] = [self.ge + aBts.ge + self.pe + toto - tata
+- tutu]
+      if len(self.__rxlev_ncell[aBts]) > 12:
+        self.__rxlev_ncell[aBts].pop(0)
 
 
     self.__bts_mutex.unlock()
 
   def meanValues(self):
+
     lg = log.AtomicLog()
     lg.info("==============================" )
     lg.info("MS " , self.id , ", measure phase")
+    lg.info("current bts :", self.bts.id)
 
     nb_values_rxlev_up = 12
     nb_values_rxlev_dl = 12
@@ -217,141 +235,135 @@ math.log10(4 * math.pi * max(1, 3 * self.__distanceMsBts[self.bts][self.__nbsamp
     nb_values_rxqual_dl = 7
     nb_values_distance = 10
 
-    self.__nb_means_rxlev_up += 1
-    self.__nb_means_rxlev_dl += 1
-    self.__nb_means_rxqual_up += 1
-    self.__nb_means_rxqual_dl += 1
-    self.__nb_means_distance += 1
-
-    if (self.__nb_means_rxlev_up == 0):
-      self.__rxlev_up_mean = []
-    if (self.__nb_means_rxlev_dl == 0):
-      self.__rxlev_dl_mean = []
-    if (self.__nb_means_rxqual_up == 0):
-      self.__rxqual_up_mean = []
-    if (self.__nb_means_rxqual_dl == 0):
-      self.__rxqual_dl_mean = []
-    if (self.__nb_means_distance == 0):
-      self.__distanceMsBts_mean = {}
-      for aBts in self.__bts_list:
-        self.__distanceMsBts_mean[aBts] = []
-
-
-
-    if (self.__nb_means_rxlev_up > nb_values_rxlev_up -1):
-      self.__nb_means_rxlev_up = 0
-      self.__rxlev_up_mean = []
-    if (self.__nb_means_rxlev_dl > nb_values_rxlev_dl -1):
-      self.__nb_means_rxlev_dl = 0
-      self.__rxlev_dl_mean = []
-    if (self.__nb_means_rxqual_up > nb_values_rxqual_dl -1):
-      self.__nb_means_rxlev_up = 0
-      self.__rxqual_up_mean = []
-    if (self.__nb_means_rxqual_dl > nb_values_rxqual_up -1):
-      self.__nb_means_rxqual_dl = 0
-      self.__rxqual_dl_mean = []
-    if (self.__nb_means_distance > nb_values_distance -1):
-      self.__nb_means_distance = 0
-      self.__distanceMsBts_mean = {}
-      for aBts in self.__bts_list:
-        self.__distanceMsBts_mean[aBts] = []
-
-
-
+    sumValues = 0
     for val in self.__rxlev_dl:
-      try:
-        self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] += val
-      except IndexError:
-        self.__rxlev_dl_mean.append(val)
-    self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] /= 12
-    lg.info("rxlev_dl_mean : " , self.__rxlev_dl_mean[self.__nb_means_rxlev_dl])
+      sumValues += val
+    sumValues /= 12
+    self.__rxlev_dl_mean.append(sumValues)
+    if len(self.__rxlev_dl_mean) > nb_values_rxlev_dl:
+      self.__rxlev_dl_mean.pop(0);
+    lg.info("rxlev_dl_mean : " , self.__rxlev_dl_mean[-1])
 
+    sumValues = 0
     for val in self.__rxlev_up:
-      try:
-        self.__rxlev_up_mean[self.__nb_means_rxlev_up] += val
-      except IndexError:
-        self.__rxlev_up_mean.append(val)
-    self.__rxlev_up_mean[self.__nb_means_rxlev_up] /= 12
-    lg.info("rxlev_up_mean : " , self.__rxlev_up_mean[self.__nb_means_rxlev_up])
+      sumValues += val
+    sumValues /= 12
+    self.__rxlev_up_mean.append(sumValues)
+    if len(self.__rxlev_up_mean) > nb_values_rxlev_up:
+      self.__rxlev_up_mean.pop(0);
+    lg.info("rxlev_up_mean : " , self.__rxlev_up_mean[-1])
 
+    sumValues = 0
     for val in self.__rxqual_dl:
-      try:
-        self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] += val
-      except IndexError:
-        self.__rxqual_dl_mean.append(val)
-    self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] /= 12
-    lg.info("rxqual_dl_mean : " , self.__rxqual_dl_mean[self.__nb_means_rxqual_dl])
-
+      sumValues += val
+    sumValues /= 12
+    self.__rxqual_dl_mean.append(sumValues)
+    if len(self.__rxqual_dl_mean) > nb_values_rxqual_dl:
+      self.__rxqual_dl_mean.pop(0);
+    lg.info("rxqual_dl_mean : " , self.__rxqual_dl_mean[-1])
+    
+    sumValues = 0
     for val in self.__rxqual_up:
-      try:
-        self.__rxqual_up_mean[self.__nb_means_rxqual_up] += val
-      except IndexError:
-        self.__rxqual_up_mean.append(val)
-    self.__rxqual_up_mean[self.__nb_means_rxqual_up] /= 12
-    lg.info("rxqual_up_mean : " , self.__rxqual_up_mean[self.__nb_means_rxqual_up])
+      sumValues += val
+    sumValues /= 12
+    self.__rxqual_up_mean.append(sumValues)
+    if len(self.__rxqual_up_mean) > nb_values_rxqual_up:
+      self.__rxqual_up_mean.pop(0);
+    lg.info("rxqual_up_mean : " , self.__rxqual_up_mean[-1])
 
+    sumValues = 0
     for aBts in self.__bts_list:
       for val in self.__distanceMsBts[aBts]:
-        try:
-          self.__distanceMsBts_mean[aBts][self.__nb_means_distance] += val
-        except IndexError:
-          self.__distanceMsBts_mean[aBts].append(val)
-        except KeyError:
-          self.__distanceMsBts_mean[aBts] = [val]
-      self.__distanceMsBts_mean[aBts][self.__nb_means_distance] /= 12
+        sumValues += val
+      sumValues /= 12
+      try:
+        self.__distanceMsBts_mean[aBts].append(sumValues)
+      except KeyError:
+        self.__distanceMsBts_mean[aBts] = [sumValues]
+      if len(self.__distanceMsBts_mean[aBts]) > nb_values_distance:
+        self.__distanceMsBts_mean[aBts].pop(0)
       lg.info("distanceMsBts_mean[" , aBts.id , "] : " , self.__distanceMsBts_mean[aBts][self.__nb_means_distance])
 
-
+    sumValues = 0
     for aBts in self.__bts_list:
-      self.__rxlev_ncell_mean[aBts] = 0
       for val in self.__rxlev_ncell[aBts]:
-        self.__rxlev_ncell_mean[aBts] += val
-      self.__rxlev_ncell_mean[aBts] /= 12
+        sumValues += val
+      sumValues /= 12
+      self.__rxlev_ncell_mean[aBts] = sumValues
       lg.info("rxlev_ncell_mean[" , aBts.id , "] : " , self.__rxlev_ncell_mean[aBts])
 
     pwr_c_d = self.bts.bts_txpwr_max - self.bts.pe
     pgbt = {}
     for aBts in self.__bts_list:
       pgbt[aBts] = (min(self.bts.ms_txpwr_max, self.p) -
-self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] -
+self.__rxlev_dl_mean[-1] -
 pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - self.__rxlev_ncell_mean[aBts])
 
     neighbour_list = []
     for aBts in self.__bts_list:
       pa = aBts.ms_txpwr_max - self.p
+      #print "pa : ", pa
+      #print "self.__rxlev_ncell_mean[aBts] : ", self.__rxlev_ncell_mean[aBts]
+      #print "aBts.rxlev_min : ", aBts.rxlev_min
+      #print "self.p : ", self.p
       if (self.__rxlev_ncell_mean[aBts] > (aBts.rxlev_min + max(self.p, pa))):
         val_neighbour_list = pgbt[aBts] - self.bts.ho_margin
+        #print "pgbt[aBts] : ", pgbt[aBts]
+        #print "self.bts.ho_margin", self.bts.ho_margin
         if (val_neighbour_list > 0):
           neighbour_list.append((aBts, val_neighbour_list))
-    neighbour_list.sort(key = operator.itemgetter(1))
+    neighbour_list.sort(key = operator.itemgetter(1), reverse=True)
 
     lg.info("neighbour_list : [" , ", ".join(
                   [ str(e[0].id) + ": " + str(e[1]) for e in neighbour_list]),
                   "]")
+    if len(self.__rxlev_up_mean) == nb_values_rxlev_up:
+      lg.info(self.__rxlev_up_mean)
+      lg.info(self.__rxlev_dl_mean)
+      lg.info(len([b for b in self.__rxlev_up_mean if b <
+self.bts.l_rxlev_up_h]))
+      lg.info(len([b for b in self.__rxlev_dl_mean if b <
+self.bts.l_rxlev_dl_h]))
+      lg.info(len([b for b in self.__rxqual_up_mean if b >
+self.bts.l_rxqual_h]))
+      lg.info(len([b for b in self.__rxqual_dl_mean if b >
+self.bts.l_rxqual_h]))
+      lg.info(self.bts.ho_margin)
 
-    nb_values_rxlev_up = 12
-    nb_values_rxlev_dl = 12
-    nb_values_rxqual_up = 7
-    nb_values_rxqual_dl = 7
-    nb_values_distance = 10
-
-
-    if(len(self.__rxlev_up_mean) == nb_values_rxlev_up and
-len(self.__rxlev_dl_mean) == nb_values_rxlev_dl and len(self.__rxqual_up_mean)
-== nb_values_rxqual_up and len(self.__rxqual_dl_mean) == nb_values_rxqual_dl and
-len(self.__distanceMsBts_mean) == nb_values_distance):
-      print("bleh")
 
       for btsTuple in neighbour_list:
-        if (self.__rxlev_up_mean[self.__nb_means_rxlev_up] < self.bts.l_rxlev_up_h
-and self.__rxlev_dl_mean[self.__nb_means_rxlev_dl] < self.bts.l_rxlev_dl_h
-and self.__rxqual_up_mean[self.__nb_means_rxqual_up] > self.bts.l_rxqual_h and
-self.__rxqual_dl_mean[self.__nb_means_rxqual_dl] > self.bts.l_rxqual_h and
-self.__distanceMsBts_mean[btsTuple[0]] > self.bts.max_ms_range and pgbt[btsTuple[0]] >
-self.bts.ho_margin and pgbt[btsTuple[0]] > 0):
+        lg.info(self.__distanceMsBts_mean[btsTuple[0]])
+        lg.info(len([b for b in self.__distanceMsBts_mean[btsTuple[0]]
+                  if b > self.bts.max_ms_range]))
+        lg.info(pgbt[btsTuple[0]])
+        if (len([b for b in self.__rxlev_up_mean
+                  if b < self.bts.l_rxlev_up_h]) >= 10
+          and len([b for b in self.__rxlev_dl_mean
+                  if b < self.bts.l_rxlev_dl_h]) >= 10
+          and len([b for b in self.__rxqual_up_mean
+                  if b > self.bts.l_rxqual_h]) >= 6
+          and len([b for b in self.__rxqual_dl_mean
+                  if b > self.bts.l_rxqual_h]) >= 6
+          and len([b for b in self.__distanceMsBts_mean[btsTuple[0]]
+                  if b > self.bts.max_ms_range]) >= 8
+          and pgbt[btsTuple[0]] > self.bts.ho_margin
+          and pgbt[btsTuple[0]] > 0):
+  
           if(btsTuple[0] != self.bts):
-            print ("MS", self.id, " handover from BTS", self.bts.id, " to BTS", btsTuple[0].id)
-            self.bts = btsTuple[0]
+            if self.__bts_candidate == btsTuple[0]:
+              self.__nb_request += 1
+              if self.__nb_request >= 3:
+                lg.info("MS", self.id, " handover from BTS", self.bts.id, " to
+BTS", btsTuple[0].id)
+                self.bts = btsTuple[0]
+              else:
+                lg.info("MS", self.id, "asked for BTS", btsTuple[0].id,
+self.__nbrequest, "times")
+            else:
+              lg.info("MS", self.id, "found new BTS", btsTuple[0].id, "for
+possible handover")
+              self.__bts_candidate = btsTuple[0]
+              nb_request = 1
 
     lg.info("==============================" )
     lg.info("" )
