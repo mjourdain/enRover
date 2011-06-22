@@ -20,6 +20,7 @@ class Carte:
     self.__color_index = 0
     self.__filename = None
     self.__speed = 1.
+    self.__freqs_color = {}
 
     self.__display.action_load.triggered.connect(self.load_file)
     self.__display.action_reload.triggered.connect(self.reload_file)
@@ -41,7 +42,9 @@ class Carte:
     """Add an element on map"""
     # Add a BTS and update all MS
     if isinstance(elem, BTS):
-      idx_color = sum([ e.network == elem.network for e in self.__bts ])
+      if not elem.f in self.__freqs_color:
+        self.__freqs_color[elem.f] = len(self.__freqs_color) + 1
+      idx_color = self.__freqs_color[elem.f]
       color = get_color(idx_color, elem.network == "GSM")
       self.__bts[elem] = QtGui.QColor(*color)
       bts_set = set(self.__bts.keys())

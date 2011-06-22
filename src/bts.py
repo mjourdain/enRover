@@ -33,6 +33,7 @@ class BTS(Station):
     # TODO
     log_range = (-32.44 - 20 * math.log10(f) + ge + 105 + pe)/20 / 3
     self.nominal_range = pow(10, log_range) * 1000 / scale
+    print "range :", self.nominal_range * scale
 
   def link(self, ms):
     """Link a MS"""
