@@ -99,14 +99,15 @@ times.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Log file}
 
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{Log file}
 
-\begin{lstlisting}
+{\tiny
+\begin{verbatim}
 ==============================
 MS  1 , measure phase
 current bts : 1
-rxlevi_dl_mean :  -63.8128912153
+rxlev_dl_mean :  -63.8128912153
 rxlev_up_mean :  -68.3553163097
 rxqual_dl_mean :  7
 rxqual_up_mean :  7
@@ -128,16 +129,17 @@ rxlev_ncell_mean[ 3 ] :  -82.6400788618
 rxlev_ncell_mean[ 8 ] :  -87.7114210819
 neighbour_list : [ 1: 66.3512305463 ]
 ==============================
-\end{lstlisting}
+\end{verbatim}
+}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{Log file}
 
+{\tiny
 \begin{verbatim}
-==============================
 MS  3 , measure phase
 current bts : 2
 rxlev_dl_mean :  -62.3445170661
@@ -151,7 +153,6 @@ distanceMsBts_mean[ 2 ] :  9348.19654032
 distanceMsBts_mean[ 7 ] :  35932.4628666
 distanceMsBts_mean[ 4 ] :  18305.1916093
 distanceMsBts_mean[ 3 ] :  18703.1507596
-distanceMsBts_mean[ 8 ] :  34095.4181139
 rxlev_ncell_mean[ 5 ] :  -71.4958167077
 rxlev_ncell_mean[ 1 ] :  -80.6370179543
 rxlev_ncell_mean[ 6 ] :  -84.408623444
@@ -159,7 +160,6 @@ rxlev_ncell_mean[ 2 ] :  -69.3785690197
 rxlev_ncell_mean[ 7 ] :  -83.2518938146
 rxlev_ncell_mean[ 4 ] :  -78.2988807803
 rxlev_ncell_mean[ 3 ] :  -77.3825558191
-rxlev_ncell_mean[ 8 ] :  -83.3007327082
 neighbour_list : [ 2: 65.9659480463, 5: 63.8487003584 ]
 rxlev_up_mean < l_rxlev_up_h :  12 / 10
 rxlev_dl_mean < l_rxlev_dl_h :  12 / 10
@@ -169,16 +169,17 @@ ho margin : 5
 distance with BTS > max_ms_range : 10 / 8
 pgbt > ho matgin : True
 distance with BTS > max_ms_range : 10 / 8
-pgbt > ho matgin : True
+pgbt > ho margin : True
 MS 3 found new BTS 5 for possible handover
 ==============================
 \end{verbatim}
-
+}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}
-\frametitle{Study of parameters effects}
+\begin{frame}[fragile]
+\frametitle{Log File}
 
+{\tiny
 \begin{verbatim}
 MS 7 asked for BTS 5 2 times
 ==============================
@@ -187,6 +188,7 @@ MS 3  handover from BTS 2 to BTS 5
 ==============================
 
 \end{verbatim}
+}
 
 \end{frame}
 %%%%%%%%%%%%%%
