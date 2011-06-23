@@ -1,5 +1,5 @@
-enRover is a programm dedicated to the simulation of mobile station handover
-between base transmiter station. It can simulate mobile station movements on a
+enRover is a program dedicated to the simulation of mobile station handover
+between base transmitter station. It can simulate mobile station movements on a
 map described by an XML file.
 
 ========== File descriptions ==========
