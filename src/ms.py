@@ -79,9 +79,10 @@ class MS(Station):
     self.__bts_list = bts_list
 
     # Initialize by choosing closest BTS, ins desired network if possible
-    btss = [ b for b in self.__bts_list if b.network == self.pref_network ]
-    if not btss:
-      btss = self.__bts_list
+    #btss = [ b for b in self.__bts_list if b.network == self.pref_network ]
+    #if not btss:
+    #  btss = self.__bts_list
+    btss = self.__bts_list
     dists = [ (bts, self.distance_from(bts)) for bts in btss ]
     self.select_bts(min(dists, key=operator.itemgetter(1))[0])
 
@@ -319,24 +320,31 @@ pwr_c_d) - (min(aBts.ms_txpwr_max, self.p) - self.__rxlev_ncell_mean[aBts])
                   [ str(e[0].id) + ": " + str(e[1]) for e in neighbour_list]),
                   "]")
     if len(self.__rxlev_up_mean) == nb_values_rxlev_up:
-      lg.info(self.__rxlev_up_mean)
-      lg.info(self.__rxlev_dl_mean)
-      lg.info(len([b for b in self.__rxlev_up_mean if b <
-self.bts.l_rxlev_up_h]))
-      lg.info(len([b for b in self.__rxlev_dl_mean if b <
-self.bts.l_rxlev_dl_h]))
-      lg.info(len([b for b in self.__rxqual_up_mean if b >
-self.bts.l_rxqual_h]))
-      lg.info(len([b for b in self.__rxqual_dl_mean if b >
-self.bts.l_rxqual_h]))
-      lg.info(self.bts.ho_margin)
+      lg.info("rxlev_up_mean < l_rxlev_up_h : ",
+              len([b for b in self.__rxlev_up_mean if b <
+              self.bts.l_rxlev_up_h]),
+              "/ 10")
+      lg.info("rxlev_dl_mean < l_rxlev_dl_h : ",
+              len([b for b in self.__rxlev_dl_mean if b <
+              self.bts.l_rxlev_dl_h]),
+              "/ 10")
+      lg.info("rxqual_up_mean > l_rxqual_h : ",
+              len([b for b in self.__rxqual_up_mean if b >
+              self.bts.l_rxqual_h]),
+              " / 6")
+      lg.info("rxqual_dl_mean > l_rxqual_h :",
+              len([b for b in self.__rxqual_dl_mean if b >
+              self.bts.l_rxqual_h]),
+              " / 6")
+      lg.info("ho margin :", self.bts.ho_margin)
 
 
       for btsTuple in neighbour_list:
-        lg.info(self.__distanceMsBts_mean[btsTuple[0]])
-        lg.info(len([b for b in self.__distanceMsBts_mean[btsTuple[0]]
-                  if b > self.bts.max_ms_range]))
-        lg.info(pgbt[btsTuple[0]])
+        lg.info("distance with BTS > max_ms_range :",
+                  len([b for b in self.__distanceMsBts_mean[btsTuple[0]]
+                  if b > self.bts.max_ms_range]),
+                  "/ 8")
+        lg.info("pgbt > ho matgin :", (pgbt[btsTuple[0]] > self.bts.ho_margin))
         if (len([b for b in self.__rxlev_up_mean
                   if b < self.bts.l_rxlev_up_h]) >= 10
           and len([b for b in self.__rxlev_dl_mean
