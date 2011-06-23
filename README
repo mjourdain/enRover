@@ -1,0 +1,35 @@
+enRover is a programm dedicated to the simulation of mobile station handover
+between base transmiter station. It can simulate mobile station movements on a
+map described by an XML file.
+
+========== File descriptions ==========
+
+specifications.odt  : Project specifications
+slides/             : Presentation slides
+
+src/confs/          : Examples maps
+src/log/            : Logs of execution
+
+src/enrover.py      : main file of project
+src/bts.py          : BTS related class and functions
+src/ms.py           : MS related class and functions
+src/station.py      : Generic station (MS or BTS) class
+src/carte.py        : Map managing class
+src/display.py      : Display managing class
+src/log.py          : Logging functions
+
+
+========== Usage ==========
+
+Simply run src/enrover.py, open a map file and look for MS doing handover
+between BTS. You can specify extra parameter to open directly a map and set
+MS speed.
+
+src/enrover.py [file [speed]]
+file is an xml file and speed must be less than 5.
+
+========== Logging ==========
+
+Measures and handover decision are logged in a file named with date and hour put
+in log/ directory.
+
