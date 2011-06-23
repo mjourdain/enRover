@@ -46,6 +46,7 @@ Inputs for each BTS :
 \end{frame}
 %%%%%%%%%
 \begin{frame}
+\frametitle{Subject}
 \begin{itemize}
   \item BTS\_TXPWR\_MAX : Maximum emission power allowed to be used by the BTS in a cell.
   \item RXLEV\_MIN : Electromagnetic field level to access to a cell.
@@ -54,10 +55,10 @@ Inputs for each BTS :
   \item L\_RXLEV\_DL\_H : Minimum received level to allow handover on downlink.
   \item L\_RXLEV\_UP\_H : Minimum received level to allow handover on uplink.
 \end{itemize}
-%%%%%%%%%%%%%
 \end{frame}
 %%%%%%%%%%%%%
 \begin{frame}
+\frametitle{Subject}
 Inputs for each Mobile Station (MS) :
 \begin{itemize}
   \item Pe : Emission power
@@ -68,6 +69,7 @@ Inputs for each Mobile Station (MS) :
 \end{frame}
 %%%%%%%%%
 \begin{frame}
+\frametitle{Subject}
 Outputs\\
 
 \begin{itemize}
@@ -90,12 +92,47 @@ Outputs\\
   \item Measure phase : RxLev uplink and downlink, RxQual uplink and downlink, Distances between MS and BTS each 40ms
   \item Mean phase on 12 samples each 480ms
   \item Storing between 8 and 12 means
-  \item Construct neighbour list, looking measures of other cells
+  \item Construct neighbour list, looking measures of other cells and sort it
   \item For each cell of the neighbour list, decide if handover is possible.
   \item If handover is possible, the order to change of bts must be repeated 3
 times.
 \end{itemize}
 \end{frame}
+%%%%%%%
+\begin{frame}[fragile]
+\frametitle{Handover algorithm}
+
+{\tiny
+\begin{verbatim}
+PWR_C_D = BTS_TXPWR_MAX - BTS Emitted Power
+PGBT(n) = (Min(MS_TXPWR\_MAX, P) - RXLEV_DL -  PWR_C_D)
+    - (Min(MS_TXPWR_MAX(n), P) - RXLEV_NCELL(n))
+
+(neighbour list construction)
+For each cell n :
+Pa = MS_TXPWR_MAX(n) - P
+IF RXLEV_NCELL(n) > RXLEV_MIN(n) + Max(P,Pa)
+  IF PGBT(n) - HO_MARGIN(n) > 0
+    Add n to NLIST
+Sort NLIST descending.
+
+(handover : YES/NO)
+For each cell of NLIST :
+IF :
+  RXLEV_UP < L_RXLEV_UP_H for 10 values in 12 samples and
+  RXLEV_DL < L_RXLEV_DL_H for 10 values in 12 samples and
+  RXQUAL_UP > L_RXQUAL_H for 6 values in 7 samples and 
+  RXQUAL_DL > L_RXQUAL_H for 6 values in 7 samples and
+  DMSBTS > MAX_MS_RANGE for 8 values in 10 samples and
+  PGBT(n) > HO_MARGIN(n) and
+  PGBT(n) > 0
+
+    Do the handover with n.
+\end{verbatim}
+}
+
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Log file}
 
@@ -192,6 +229,8 @@ MS 3  handover from BTS 2 to BTS 5
 
 \end{frame}
 %%%%%%%%%%%%%%
+\section{Study : parameters effect on deconnections}
+
 \begin{frame}
 \frametitle{Study of parameters effects}
 Creation of 4 configuration files, representing maps with BTS and 10 MS.
