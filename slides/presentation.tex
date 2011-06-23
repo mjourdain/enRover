@@ -1,0 +1,196 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+
+\usetheme{UTBM}
+%\usecolortheme{UTBM}
+
+\begin{document}
+
+\begin{frame}
+\frametitle{Handover}
+\begin{center}
+  \includegraphics[width=0.6\textwidth]{./images/capture.png}
+\end{center}
+
+Mathieu BRIAND \\
+Marine JOURDAIN
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Plan}
+\tableofcontents
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Subject}
+
+\begin{frame}
+\frametitle{Subject}
+Inputs for each BTS :
+\begin{itemize}
+  \item Pe : Emission power
+  \item Ge : Emission gain
+  \item F : Frequency
+  \item HO\_MARGIN : Minimum marge between two signals to allow handover ;
+  \item MS\_TXPWR\_MAX : Maximum emission power allowed to be used by the MS in a cell.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+  \item BTS\_TXPWR\_MAX : Maximum emission power allowed to be used by the BTS in a cell.
+  \item RXLEV\_MIN : Electromagnetic field level to access to a cell.
+  \item MAX\_MS\_RANGE : Maximum distance between Mobile Station and BTS.
+  \item L\_RXQUAL\_H: Minimum quality to allow handover.
+  \item L\_RXLEV\_DL\_H : Minimum received level to allow handover on downlink.
+  \item L\_RXLEV\_UP\_H : Minimum received level to allow handover on uplink.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+Inputs for each Mobile Station (MS) :
+\begin{itemize}
+  \item Pe : Emission power
+  \item Ge : Emission gain
+  \item P : Maximum Emission Power of the MS
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+Outputs\\
+
+\begin{itemize}
+    \item Log file
+    \item Graphic interface with MS colored in the BTS color it is linked
+(Python language)
+      \begin{center}
+        \includegraphics[width=0.4\textwidth]{./images/capture.png}
+      \end{center}
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Handover algorithm}
+
+\begin{frame}
+\frametitle{Handover algorithm}
+\begin{itemize}
+  \item Measure phase : RxLev uplink and downlink, RxQual uplink and downlink, Distances between MS and BTS each 40ms
+  \item Mean phase on 12 samples each 480ms
+  \item Storing between 8 and 12 means
+  \item Construct neighbour list, looking measures of other cells
+  \item For each cell of the neighbour list, decide if handover is possible.
+  \item If handover is possible, the order to change of bts must be repeated 3
+times.
+
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Log file}
+\begin{frame}
+\frametitle{Log file}
+\begin{itemize}
+ \item 
+ \item 
+ \item 
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Study of parameters effects}
+\begin{frame}
+\frametitle{Study of parameters effects}
+Creation of 4 configuration files, representing maps with BTS and 10 MS.
+\begin{itemize}
+ \item Overlap between BTS
+ \item Handover margin
+ \item Number of orders to change from a BTS to another
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Study of parameters effects}
+For 1 order to change of BTS
+\begin{itemize}
+ \item High overlap and weak ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 1874 handovers
+  \end{itemize}
+ \item High overlap and strong ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 1573 handovers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Study of parameters effects}
+\begin{itemize}
+ \item Low overlap and weak ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 3314 handovers
+  \end{itemize}
+ \item Low overlap and strong ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 1492 handovers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Study of parameters effects}
+For 3 orders to change of BTS
+\begin{itemize}
+ \item High overlap and weak ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 715 handovers
+  \end{itemize}
+ \item High overlap and strong ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 984 handovers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Study of parameters effects}
+\begin{itemize}
+  \item Low overlap and weak ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 1039 handovers
+  \end{itemize}
+  \item Low overlap and strong ho margin
+  \begin{itemize}
+    \item In a 5 min interval : 1644 handovers
+  \end{itemize}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Deductions}
+\begin{frame}
+\frametitle{Deductions}
+\begin{itemize}
+  \item When ho margin increase, the number of deconnections decrease.
+  \item Effect of ho margin become coherent when number of orders decrease
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Questions}
+
+\begin{frame}
+\begin{center}
+Questions ?
+\end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.07pt}
+\beamer@sectionintoc {1}{Subject}{3}{0}{1}
+\beamer@sectionintoc {2}{Handover algorithm}{7}{0}{2}
+\beamer@sectionintoc {3}{Log file}{8}{0}{3}
+\beamer@sectionintoc {4}{Study of parameters effects}{9}{0}{4}
+\beamer@sectionintoc {5}{Conclusion}{12}{0}{5}
