@@ -18,6 +18,9 @@ src/carte.py        : Map managing class
 src/display.py      : Display managing class
 src/log.py          : Logging functions
 
+========== Install ==========
+
+No installation is required, only python interpreter and PyQt4 library.
 
 ========== Usage ==========
 
