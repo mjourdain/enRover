@@ -5,19 +5,20 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{10pt plus 6pt minus 4pt}
 
-\usetheme{UTBM}
-%\usecolortheme{UTBM}
+\usetheme[suiveur={A. Caminada}, header=fullnav]{UTBM}
+\usecolortheme{UTBM}
+
+\author{Mathieu Briand\\
+Marine Jourdain}
 
 \begin{document}
 
 \begin{frame}
 \frametitle{Handover}
+
 \begin{center}
   \includegraphics[width=0.6\textwidth]{./images/capture.png}
 \end{center}
-
-Mathieu BRIAND \\
-Marine JOURDAIN
 
 \end{frame}
 
@@ -25,6 +26,7 @@ Marine JOURDAIN
 
 \begin{frame}
 \frametitle{Outline}
+
 \tableofcontents
 
 \end{frame}
@@ -33,7 +35,22 @@ Marine JOURDAIN
 \section{Subject}
 
 \begin{frame}
-\frametitle{Subject}
+\frametitle{Objectives}
+
+\begin{itemize}
+  \item Understand handover mechanism
+  \item Simulate handover in GSM and UMTS networks
+  \item Study of handover margin effect on handover frequency according to BTS
+overlap
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Algorithm inputs}
+
 Inputs for each BTS :
 \begin{itemize}
   \item Pe : Emission power
@@ -44,9 +61,11 @@ Inputs for each BTS :
 \end{itemize}
 
 \end{frame}
+
 %%%%%%%%%
 \begin{frame}
-\frametitle{Subject}
+\frametitle{Algorithm inputs}
+
 \begin{itemize}
   \item BTS\_TXPWR\_MAX : Maximum emission power allowed to be used by the BTS in a cell.
   \item RXLEV\_MIN : Electromagnetic field level to access to a cell.
@@ -56,9 +75,11 @@ Inputs for each BTS :
   \item L\_RXLEV\_UP\_H : Minimum received level to allow handover on uplink.
 \end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%
 \begin{frame}
-\frametitle{Subject}
+\frametitle{Algorithm inputs}
+
 Inputs for each Mobile Station (MS) :
 \begin{itemize}
   \item Pe : Emission power
@@ -69,8 +90,7 @@ Inputs for each Mobile Station (MS) :
 \end{frame}
 %%%%%%%%%
 \begin{frame}
-\frametitle{Subject}
-Outputs\\
+\frametitle{Outputs}
 
 \begin{itemize}
     \item Log file
@@ -88,6 +108,7 @@ Outputs\\
 
 \begin{frame}
 \frametitle{Handover algorithm}
+
 \begin{itemize}
   \item Measure phase : RxLev uplink and downlink, RxQual uplink and downlink, Distances between MS and BTS each 40ms
   \item Mean phase on 12 samples each 480ms
@@ -185,16 +206,12 @@ rxqual_dl_mean :  7
 rxqual_up_mean :  7
 distanceMsBts_mean[ 5 ] :  16911.5936564
 distanceMsBts_mean[ 1 ] :  27359.9064007
-distanceMsBts_mean[ 6 ] :  38161.7981747
 distanceMsBts_mean[ 2 ] :  9348.19654032
-distanceMsBts_mean[ 7 ] :  35932.4628666
 distanceMsBts_mean[ 4 ] :  18305.1916093
 distanceMsBts_mean[ 3 ] :  18703.1507596
 rxlev_ncell_mean[ 5 ] :  -71.4958167077
 rxlev_ncell_mean[ 1 ] :  -80.6370179543
-rxlev_ncell_mean[ 6 ] :  -84.408623444
 rxlev_ncell_mean[ 2 ] :  -69.3785690197
-rxlev_ncell_mean[ 7 ] :  -83.2518938146
 rxlev_ncell_mean[ 4 ] :  -78.2988807803
 rxlev_ncell_mean[ 3 ] :  -77.3825558191
 neighbour_list : [ 2: 65.9659480463, 5: 63.8487003584 ]
@@ -213,6 +230,7 @@ MS 3 found new BTS 5 for possible handover
 }
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[fragile]
 \frametitle{Log File}
 
@@ -228,11 +246,13 @@ MS 3  handover from BTS 2 to BTS 5
 }
 
 \end{frame}
+
 %%%%%%%%%%%%%%
-\section{Study : parameters effect on deconnections}
+\section{Study of parameters effects}
 
 \begin{frame}
 \frametitle{Study of parameters effects}
+
 Creation of 4 configuration files, representing maps with BTS and 10 MS.
 \begin{itemize}
  \item Overlap between BTS
@@ -240,9 +260,11 @@ Creation of 4 configuration files, representing maps with BTS and 10 MS.
  \item Number of orders to change from a BTS to another
 \end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Study of parameters effects}
+
 For 1 order to change of BTS
 \begin{itemize}
  \item High overlap and weak ho margin
@@ -255,9 +277,11 @@ For 1 order to change of BTS
   \end{itemize}
 \end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Study of parameters effects}
+
 \begin{itemize}
  \item Low overlap and weak ho margin
   \begin{itemize}
@@ -273,6 +297,7 @@ For 1 order to change of BTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Study of parameters effects}
+
 For 3 orders to change of BTS
 \begin{itemize}
  \item High overlap and weak ho margin
@@ -285,9 +310,11 @@ For 3 orders to change of BTS
   \end{itemize}
 \end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Study of parameters effects}
+
 \begin{itemize}
   \item Low overlap and weak ho margin
   \begin{itemize}
@@ -299,11 +326,11 @@ For 3 orders to change of BTS
   \end{itemize}
 \end{itemize}
 \end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Deductions}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Deductions}
+
 \begin{itemize}
   \item When ho margin increase, the number of deconnections decrease.
   \item Effect of ho margin become coherent when number of orders decrease
@@ -311,8 +338,28 @@ For 3 orders to change of BTS
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Bibliography}
+\begin{frame}
+\frametitle{Difficulties}
 
+\begin{itemize}
+  \item Find precise documentation on handover algorithm
+  \item Understand it
+  \item No sufficient time to implement distinction between GSM and UMTS network
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Conclusion}
+
+\begin{itemize}
+  \item Specifications mostly completed, but UMTS/GSM part remain to
+implement
+  \item Good understanding of a precise point of cellular networks
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{Bibliography}
 
@@ -327,8 +374,6 @@ Philippe Godlewski, Sami Tabbane for the handover algorithm
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Questions}
-
 \begin{frame}
 \begin{center}
 Questions ?
