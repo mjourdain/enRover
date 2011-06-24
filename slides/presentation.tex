@@ -24,7 +24,7 @@ Marine JOURDAIN
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Plan}
+\frametitle{Outline}
 \tableofcontents
 
 \end{frame}
@@ -105,7 +105,7 @@ times.
 {\tiny
 \begin{verbatim}
 PWR_C_D = BTS_TXPWR_MAX - BTS Emitted Power
-PGBT(n) = (Min(MS_TXPWR\_MAX, P) - RXLEV_DL -  PWR_C_D)
+PGBT(n) = (Min(MS_TXPWR_MAX, P) - RXLEV_DL -  PWR_C_D)
     - (Min(MS_TXPWR_MAX(n), P) - RXLEV_NCELL(n))
 
 (neighbour list construction)
@@ -301,11 +301,28 @@ For 3 orders to change of BTS
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Deductions}
+
 \begin{frame}
 \frametitle{Deductions}
 \begin{itemize}
   \item When ho margin increase, the number of deconnections decrease.
   \item Effect of ho margin become coherent when number of orders decrease
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Bibliography}
+
+\begin{frame}
+\frametitle{Bibliography}
+
+\begin{itemize}
+  \item Réseaux GSM-DCS, 4ème édition revue et augmentée, 1999, Xavier Lagrange,
+Philippe Godlewski, Sami Tabbane for the handover algorithm
+  \item Performance enhancements in a frequency hopping GSM network, Thomas Toftegaard Nielsen, Jeroen Wigard, for BER = f(Eb/No) curve.
+  \item RE56 lectures by Nadine Malhouroux for Friis Formula
+  \item RE56 lectures by Pascal Chambreuil for precise values on MS and BTS
+  \item http://www.gsmfordummies.com/air/radiolink.shtml for the table conversion between BER and RxQual
 \end{itemize}
 \end{frame}
 
